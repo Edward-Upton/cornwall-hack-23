@@ -2,6 +2,8 @@ import OpenAI from "openai";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { env } from "~/env.mjs";
+import { HelpCircleIcon } from "lucide-react";
+import { hasOwn } from "openai/core";
 
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
