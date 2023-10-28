@@ -1,12 +1,12 @@
 import OpenAI from "openai";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { env } from "~/env.mjs";
 
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
 export const suggestionRouter = createTRPCRouter({
-  submit: publicProcedure
+  submit: protectedProcedure
     .input(
       z.object({
         text: z.string().min(1),
