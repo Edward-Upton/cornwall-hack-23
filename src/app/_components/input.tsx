@@ -12,26 +12,37 @@ const Input = () => {
 
   return (
     <div className="space-y-4">
-      <Textarea
-        value={input}
-        onChange={(v) => setInput(v.target.value)}
-        className="h-[40rem] resize-none font-mono text-lg"
-      />
-      <Button
-        onClick={() =>
-          submission.mutate(
-            { text: input },
-            {
-              onSuccess: (data) => {
-                setResult(data?.content ?? "");
-              },
-            },
-          )
-        }
-      >
-        Suggest
-      </Button>
-      <p className="whitespace-pre-wrap">{result}</p>
+      <div className="grid grid-cols-4 gap-2">
+        <div className="col-span-3">
+          <Textarea
+            value={input}
+            onChange={(v) => setInput(v.target.value)}
+            className="h-[40rem] resize-none font-mono text-lg"
+          />
+        </div>
+        <div className="space-y-2">
+          <Textarea
+            value={result}
+            onChange={(v) => setInput(v.target.value)}
+            className="h-[37rem] resize-none font-mono text-lg"
+          />
+          <Button
+            className="w-full"
+            onClick={() =>
+              submission.mutate(
+                { text: input },
+                {
+                  onSuccess: (data) => {
+                    setResult(data?.content ?? "");
+                  },
+                },
+              )
+            }
+          >
+            Suggest
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
