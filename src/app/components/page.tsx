@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -63,6 +64,9 @@ export default function Components() {
             <Button type="submit">Submit</Button>
           </form>
         </Form>
+      </div>
+      <div className="flex flex-col gap-1">
+        <Textarea className="min-w-[20rem] font-mono" />
       </div>
     </div>
   );
