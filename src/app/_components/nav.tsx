@@ -20,7 +20,9 @@ export default async function Nav() {
     <nav className="flex items-center justify-between border-b-2 px-16 py-2 font-mono shadow-lg">
       <div className="flex items-center gap-8">
         {/* Page Title */}
-        <h1 className="text text-lg font-bold text-primary">rubberDuck.sh</h1>
+        <h1 className="text text-lg font-bold text-primary">
+          rubberduck.sh
+        </h1>
         {/* Navigation */}
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
