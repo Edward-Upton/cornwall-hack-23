@@ -1,9 +1,9 @@
-import { Textarea } from "~/components/ui/textarea";
+import Input from "./_components/input";
 
 export default function Home() {
   return (
-    <main>
-      <Textarea className="font-mono min-h-screen" />
-    </main>
+    <div className="h-full">
+      <Input />
+    </div>
   );
 }
