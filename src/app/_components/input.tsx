@@ -40,12 +40,22 @@ const Input = () => {
         />
       </div>
       {/* Modas */}
-      <div className="group flex h-full flex-col gap-2 ">
+      <div className="group flex h-full flex-col gap-2">
         {editors.map((editor) => (
           <Button
             key={editor.value}
             variant="ghost"
-            className="h-14 hover:bg-accent/50"
+            className="h-16 hover:bg-accent/50"
+            onClick={() =>
+              submission.mutate({
+                editorType: editor.value,
+                text: input,
+              }, {
+                onSuccess: (data) => {
+                  setResult(data?.content ?? "");
+                }
+              })
+            }
           >
             <div className="space-y-3 px-2">
               <editor.icon className="w-full" />
@@ -60,24 +70,8 @@ const Input = () => {
       <div className="col-span-4 flex h-full flex-col gap-2">
         <Textarea
           value={result}
-          onChange={(v) => setInput(v.target.value)}
           className="grow resize-none font-mono text-lg"
         />
-        <Button
-          className="w-full"
-          onClick={() =>
-            submission.mutate(
-              { text: input },
-              {
-                onSuccess: (data) => {
-                  setResult(data?.content ?? "");
-                },
-              },
-            )
-          }
-        >
-          Suggest
-        </Button>
       </div>
     </div>
   );
