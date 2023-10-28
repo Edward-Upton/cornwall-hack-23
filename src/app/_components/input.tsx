@@ -11,37 +11,36 @@ const Input = () => {
   const [result, setResult] = useState("");
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-4 gap-2">
-        <div className="col-span-3">
-          <Textarea
-            value={input}
-            onChange={(v) => setInput(v.target.value)}
-            className="h-[40rem] resize-none font-mono text-lg"
-          />
-        </div>
-        <div className="space-y-2">
-          <Textarea
-            value={result}
-            onChange={(v) => setInput(v.target.value)}
-            className="h-[37rem] resize-none font-mono text-lg"
-          />
-          <Button
-            className="w-full"
-            onClick={() =>
-              submission.mutate(
-                { text: input },
-                {
-                  onSuccess: (data) => {
-                    setResult(data?.content ?? "");
-                  },
+    <div className="grid h-full w-full grid-cols-12">
+      <div className="col-span-7 h-full">
+        <Textarea
+          value={input}
+          onChange={(v) => setInput(v.target.value)}
+          className="h-full resize-none font-mono text-lg"
+        />
+      </div>
+      <div className="h-full"></div>
+      <div className="col-span-4 flex h-full flex-col gap-2">
+        <Textarea
+          value={result}
+          onChange={(v) => setInput(v.target.value)}
+          className="grow resize-none font-mono text-lg"
+        />
+        <Button
+          className="w-full"
+          onClick={() =>
+            submission.mutate(
+              { text: input },
+              {
+                onSuccess: (data) => {
+                  setResult(data?.content ?? "");
                 },
-              )
-            }
-          >
-            Suggest
-          </Button>
-        </div>
+              },
+            )
+          }
+        >
+          Suggest
+        </Button>
       </div>
     </div>
   );

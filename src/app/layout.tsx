@@ -33,10 +33,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <body
-            className={`relative flex min-h-screen flex-col bg-background font-sans text-foreground ${inter.variable}`}
+            className={`relative flex h-screen flex-col bg-background font-sans text-foreground ${inter.variable}`}
           >
             <Nav />
-            <div className="grow px-64 py-32">{children}</div>
+            <div className="flex-1 px-64 py-32">{children}</div>
           </body>
         </ThemeProvider>
       </TRPCReactProvider>
