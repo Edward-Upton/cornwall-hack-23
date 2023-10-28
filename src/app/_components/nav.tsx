@@ -20,7 +20,7 @@ export default async function Nav() {
       <div className="flex items-center gap-8">
         {/* Page Title */}
         <h1 className="text text-lg font-bold text-primary">
-          Cornwall Hack 23
+          rubberduck.sh
         </h1>
         {/* Navigation */}
         <div className="flex items-center gap-2">
