@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { getServerAuthSession } from "~/server/auth";
 import Theme from "./theme";
+import ActiveLink from "./active-link";
 
 export default async function Nav() {
   const session = await getServerAuthSession();
@@ -25,10 +26,10 @@ export default async function Nav() {
         {/* Navigation */}
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/">Home</Link>
+            <ActiveLink href="/" display="Home" />
           </Button>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/components">Components</Link>
+            <ActiveLink href="/components" display="Components" />
           </Button>
         </div>
       </div>
