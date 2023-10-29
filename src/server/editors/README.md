@@ -1,14 +1,14 @@
 # Editors
-Editors are mutations that change the writers text. 
+Editors are mutations that change the writers text.
 
 ## Supported Editors
-- Expander: takes a rough outline of a paragraph and expands it into something more finished. 
+- Expander: takes a rough outline of a paragraph and expands it into something more finished.
 - Summariser: takes a verbose bit of text and condenses it.
 - BulletPointer: takes a title or subtitle and expands it into bullet points.
 
 
 # Example: BulletPointer Editor
-We can use this editor to expand a bullet point to give it more detail. 
+We can use this editor to expand a bullet point to give it more detail.
 
 ### Example input
 GPT training data is not limited to human-generated text

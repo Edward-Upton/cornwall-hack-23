@@ -57,7 +57,7 @@ const Input = () => {
                 text: selected.length > 0 ? selected : input,
               }, {
                 onSuccess: (data) => { handleNewEvent({
-                  input: selected.length > 0 ? selected : input, 
+                  input: selected.length > 0 ? selected : input,
                   output: data?.content ?? "",
                   editType: editor.value,
                 })}
@@ -82,7 +82,7 @@ const Input = () => {
           </div>
         )}
         {events.map((event) => {
-          const uuid = crypto.randomUUID(); 
+          const uuid = crypto.randomUUID();
 
           return (
             <Edit key={uuid} event={event} events={events} setEvents={setEvents} setInput={setInput} />

@@ -1,8 +1,11 @@
-import {z} from "zod";
-import {adminProcedure, createTRPCRouter} from "../trpc";
-import {EditorTypes} from "~/lib/editors-types";
-import {getExpansion} from "~/server/editors/expander/prompt";
-import {getCitation} from "~/server/editors/citation/prompt";
+import { z } from "zod";
+import { adminProcedure, createTRPCRouter } from "../trpc";
+import { EditorTypes } from "~/lib/editors-types";
+import { getExpansion } from "~/server/editors/expander/prompt";
+import { getSummary } from "~/server/editors/summariser/prompt";
+import { getStructure } from "~/server/editors/structure/prompt";
+import { getBrainstorm } from "~/server/editors/brainstorm/prompt";
+import { getCitation } from "~/server/editors/citation/prompt";
 
 export const suggestionRouter = createTRPCRouter({
   submit: adminProcedure
@@ -12,15 +15,19 @@ export const suggestionRouter = createTRPCRouter({
         text: z.string().min(1),
       }),
     )
-    .mutation(async ({input}) => {
+    .mutation(async ({ input }) => {
       let completion;
 
       // Perform the mutation specified by the EditorType.
       switch (input.editorType) {
         case "expansion":
           completion = await getExpansion(input.text);
-        case "points":
-          completion = await getExpansion(input.text);
+        case "summarise":
+          completion = await getSummary(input.text);
+        case "structure":
+          completion = await getStructure(input.text);
+        case "brainstorm":
+          completion = await getBrainstorm(input.text);
         // completion = await getBulletPoints(input.text);
         case "summarise":
           completion = await getExpansion(input.text);
