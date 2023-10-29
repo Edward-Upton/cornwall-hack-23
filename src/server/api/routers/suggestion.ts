@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { adminProcedure, createTRPCRouter } from "../trpc";
 import { EditorTypes } from "~/lib/editors-types";
 import { getExpansion } from "~/server/editors/expander/prompt";
 
 export const suggestionRouter = createTRPCRouter({
-  submit: protectedProcedure
+  submit: adminProcedure
     .input(
       z.object({
         editorType: EditorTypes,
