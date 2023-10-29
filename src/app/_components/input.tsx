@@ -4,30 +4,15 @@ import { AlignVerticalSpaceAround, List, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { type EditorType } from "~/lib/editors-types";
+import { EditEvent, Editors, type EditorType } from "~/lib/editors-types";
 import { api } from "~/trpc/react";
+import { Edit } from "./edit";
 
-const editors: {
-  display: string;
-  value: EditorType;
-  icon: LucideIcon;
-}[] = [
-  {
-    display: "Expand",
-    value: "expansion",
-    icon: List,
-  },
-  {
-    display: "Summarise",
-    value: "summarise",
-    icon: AlignVerticalSpaceAround,
-  },
-];
 
 const Input = () => {
   const submission = api.suggestion.submit.useMutation();
   const [input, setInput] = useState("");
-  const [result, setResult] = useState("");
+  const [events, setEvents] = useState<EditEvent[]>([]);
 
   return (
     <div className="grid-cols-16 grid h-full w-full gap-4">
@@ -39,9 +24,9 @@ const Input = () => {
           className="h-full resize-none font-mono text-lg"
         />
       </div>
-      {/* Modas */}
+      {/* Editors */}
       <div className="group flex h-full flex-col gap-2">
-        {editors.map((editor) => (
+        {Editors.map((editor) => (
           <Button
             key={editor.value}
             variant="ghost"
@@ -52,7 +37,13 @@ const Input = () => {
                 text: input,
               }, {
                 onSuccess: (data) => {
-                  setResult(data?.content ?? "");
+                  const newEvent = {
+                    input: input,
+                    output: data?.content ?? "",
+                    editType: editor.value,
+                  }
+                  const eventsLog = [...events, newEvent];
+                  setEvents(eventsLog);
                 }
               })
             }
@@ -68,10 +59,9 @@ const Input = () => {
       </div>
       {/* Suggestion */}
       <div className="col-span-4 flex h-full flex-col gap-2">
-        <Textarea
-          value={result}
-          className="grow resize-none font-mono text-lg"
-        />
+        {events.map((event) => (
+          <Edit event={event} />
+        ))}
       </div>
     </div>
   );
