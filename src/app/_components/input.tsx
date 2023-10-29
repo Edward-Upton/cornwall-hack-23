@@ -73,8 +73,9 @@ const Input = () => {
     });
     const result = await submission.mutateAsync(
       {
-        editorType: type,
         text: selected.length > 0 ? selected : input,
+        editorType: type,
+        metaText: metaInput,
       }
     );
     mutationCallback(result, pendingID, type);
