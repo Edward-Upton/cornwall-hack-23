@@ -29,6 +29,7 @@ const Input = () => {
           value={input}
           onChange={(v) => setInput(v.target.value)}
           className="h-full resize-none font-mono text-lg selection:bg-accent"
+          placeholder="Start typing..."
           // A tad annoying, but React seems to have its types mixed up
           onSelect={(e) => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
@@ -44,12 +45,14 @@ const Input = () => {
         {selected}
       </div>
       {/* Editors */}
-      <div className="group flex h-full flex-col gap-2">
-        {Editors.map((editor) => (
+      <div className="group flex h-full flex-col gap-1 items-center">
+        
+        {Editors.map((editor) => ([
+          <div className="y-1"></div>,
           <Button
             key={editor.value}
             variant="ghost"
-            className="h-16 hover:bg-accent/50"
+            className="h-16 w-16 hover:bg-accent/50"
             onClick={() => {
               setEditLoading(true);
               submission.mutate({
@@ -64,14 +67,13 @@ const Input = () => {
               })
             }}
           >
-            <div className="space-y-3 px-2">
-              <editor.icon className="w-full" />
-              <p className="text-sm opacity-0 transition-opacity group-hover:opacity-100">
-                {editor.display}
-              </p>
-            </div>
-          </Button>
-        ))}
+              <editor.icon size={"36"}/>
+          </Button>,
+          <p className="mt-[-4px] w-full text-center text-sm opacity-0 transition-opacity group-hover:opacity-100">
+            {editor.display}
+          </p>,
+          <div className="space-y-1"></div>,
+        ]))}
       </div>
       {/* Suggestion */}
       <div className="col-span-4 flex h-full flex-col gap-2">
