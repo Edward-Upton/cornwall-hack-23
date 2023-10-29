@@ -45,7 +45,7 @@ const Input = () => {
       <div className="col-span-11 flex h-full flex-col">
         <>
           <Textarea
-            value={meta_input}
+            value={metaInput}
             onChange={(v) => setMetaInput(v.target.value)}
             className="h-2 mb-3 resize-none font-mono text-lg selection:bg-accent"
             placeholder="What are you writing about?"
