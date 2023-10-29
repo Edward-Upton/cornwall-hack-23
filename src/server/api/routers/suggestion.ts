@@ -3,13 +3,9 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { env } from "~/env.mjs";
 import { EditorTypes, type EditorType } from "~/lib/editors-types";
+import { getExpansion } from "~/server/editors/expander/prompt";
 
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
-
-const systemMessage: Record<EditorType, string> = {
-  simplify: "Simplify the following text",
-  summarise: "Summarise the following text into bullet points",
-};
 
 export const suggestionRouter = createTRPCRouter({
   submit: protectedProcedure
@@ -20,14 +16,17 @@ export const suggestionRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      const completion = await openai.chat.completions.create({
-        messages: [
-          { role: "system", content: systemMessage[input.editorType] },
-          { role: "user", content: input.text },
-        ],
-        model: "gpt-3.5-turbo",
-        max_tokens: 150,
-      });
+      var completion;
+
+      // Switch on editor type
+      switch (input.editorType) {
+        case "summarise":
+          completion = await getExpansion(input.text);
+        case "expansion":
+          completion = await getExpansion(input.text);
+        default:
+          completion = await getExpansion(input.text);
+      }
 
       return completion.choices[0]?.message;
     }),

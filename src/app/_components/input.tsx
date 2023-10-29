@@ -13,13 +13,13 @@ const editors: {
   icon: LucideIcon;
 }[] = [
   {
-    display: "Summarise",
-    value: "summarise",
+    display: "Expand",
+    value: "expansion",
     icon: List,
   },
   {
-    display: "Simplify",
-    value: "simplify",
+    display: "Summarise",
+    value: "summarise",
     icon: AlignVerticalSpaceAround,
   },
 ];
