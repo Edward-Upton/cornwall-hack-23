@@ -73,7 +73,7 @@ const Input = () => {
           </div>
         )}
         {events.map((event) => (
-          <Edit event={event} events={events} setEvents={setEvents} />
+          <Edit event={event} events={events} setEvents={setEvents} setInput={setInput} />
         ))}
       </div>
     </div>
