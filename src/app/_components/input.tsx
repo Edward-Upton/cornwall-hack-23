@@ -1,56 +1,83 @@
 "use client";
 
-import { LoaderIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { type EditEvent, Editors } from "~/lib/editors-types";
+import { type EditEvent, Editors, type EditorType } from "~/lib/editors-types";
 import { api } from "~/trpc/react";
 import { Edit } from "./edit";
+import React from "react";
+import { type ChatCompletionMessage } from "openai/resources";
 
 const Input = () => {
   const submission = api.suggestion.submit.useMutation();
   const [input, setInput] = useState("");
   const [metaInput, setMetaInput] = useState("");
   const [events, setEvents] = useState<EditEvent[]>([]);
-  const [editLoading, setEditLoading] = useState(false);
   const [selected, setSelected] = useState<string>("");
+
+  const eventsRef = useRef<EditEvent[]>();
+  eventsRef.current = events;
 
   useEffect(() => {
     setInput("When we think about an entity's ability to dictate the arrangement of the atoms in our lightcone, we might be tempted to boil that capacity down to a single value like 'Intelligence' or 'IQ'. I don't think this is a helpful way of thinking about the problem.");
   }, []);
 
-  // Handle new event checks if a pending event for the ID
-  const handleNewEvent = (newEvent: EditEvent) => {
-    // Search for the pending event
-    const pendingEvent =
-      events.find((event) => event.id === newEvent.id) ?? null;
+  // Add an event to the display of EditEvents, prior to the API request finishing.
+  const addPendingEvent = (event: EditEvent) => {
+    eventsRef.current = [...events, event];
+    setEvents([...events, event]);
+  }
 
-    if (pendingEvent) {
-    } else {
-    }
+  // Update the pending event when the API request finishes.
+  const updatePendingEvent = (newEvent: EditEvent) => {
+    // Get the updated list of events from the ref.
+      const allEvents = eventsRef.current;
 
-    const allEvents = [...events];
+      if (!allEvents) {
+        throw new Error("Events ref is undefined. This should never happen.");
+      }
 
-    if (pendingEvent) {
-      console.log("Found pending event; id: " + pendingEvent.id);
-      console.log("Removing pending event: ", allEvents);
-      allEvents.splice(events.indexOf(pendingEvent), 1);
-      console.log("Removed pending event: ", allEvents);
-      pendingEvent.id = newEvent.id;
-      pendingEvent.input = newEvent.input;
-      pendingEvent.output = newEvent.output;
-      pendingEvent.editType = newEvent.editType;
-      allEvents.push(pendingEvent);
-    } else {
-      console.log("No pending event found");
-      console.log("Adding new event: ", allEvents.length);
-      allEvents.push(newEvent);
-      console.log("Added new event: ", allEvents.length);
-    }
+      // Find the pending event using the UUID.
+      const pendingEvent = allEvents.findIndex((e) => e.id === newEvent.id);
 
-    setEvents(allEvents);
-    setEditLoading(false);
+      if (pendingEvent === undefined) {
+        throw new Error("Pending event not found. This should never happen.");
+      }
+
+      // Replace the pending event with the new event that has the API response.
+      allEvents.splice(pendingEvent, 1, newEvent);
+
+      eventsRef.current = allEvents;
+      setEvents([...allEvents]);
+  };
+
+
+  const mutationCallback = React.useCallback((data: ChatCompletionMessage | undefined, pendingID: string, editType: EditorType) => {
+    updatePendingEvent({
+      id: pendingID,
+      input: selected.length > 0 ? selected : input,
+      output: data?.content ?? "",
+      editType: editType,
+    });
+  }, [input, selected]);
+
+  const handleClick = async (type: EditorType) => {
+    const pendingID = crypto.randomUUID();
+    // Add a pending event.
+    addPendingEvent({
+      id: pendingID,
+      input: selected.length > 0 ? selected : input,
+      output: "",
+      editType: type,
+    });
+    const result = await submission.mutateAsync(
+      {
+        editorType: type,
+        text: selected.length > 0 ? selected : input,
+      }
+    );
+    mutationCallback(result, pendingID, type);
   };
 
   return (
@@ -94,6 +121,7 @@ const Input = () => {
           />
         </>
       </div>
+
       {/* Editors */}
       <div className="group mt-4 flex h-full flex-col items-center gap-1">
         {Editors.map((editor) => (
@@ -101,35 +129,7 @@ const Input = () => {
             <Button
               variant="ghost"
               className="h-16 w-16 hover:bg-accent/50"
-              onClick={() => {
-                const pendingID = crypto.randomUUID();
-                setEditLoading(true);
-                // Add a pending event.
-                handleNewEvent({
-                  id: pendingID,
-                  input: selected.length > 0 ? selected : input,
-                  output: "",
-                  editType: editor.value,
-                });
-                submission.mutate(
-                  {
-                    editorType: editor.value,
-                    text: selected.length > 0 ? selected : input,
-                    metaText: metaInput,
-                  },
-                  {
-                    onSuccess: (data) => {
-                      console.log("received:", data);
-                      handleNewEvent({
-                        id: pendingID,
-                        input: selected.length > 0 ? selected : input,
-                        output: data?.content ?? "",
-                        editType: editor.value,
-                      });
-                    },
-                  },
-                );
-              }}
+              onClick={() => handleClick(editor.value)}
             >
               <editor.icon size={"36"} />
             </Button>
@@ -139,14 +139,9 @@ const Input = () => {
           </div>
         ))}
       </div>
+
       {/* Edit events */}
       <div className="col-span-4 flex h-full flex-col gap-2">
-        {editLoading && (
-          <div className="flex h-16 items-center justify-center rounded-md bg-primary">
-            <p className="text-sm text-primary-foreground">Loading...</p>
-            <LoaderIcon className="ml-2 h-6 w-6 animate-spin text-accent" />
-          </div>
-        )}
         {events.map((event) => (
           <Edit
             key={event.id}
