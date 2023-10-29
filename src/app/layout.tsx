@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`relative flex h-screen flex-col bg-background font-sans text-foreground ${inter.variable}`}
+        className={`relative flex h-screen flex-col bg-background font-mono text-foreground ${inter.variable}`}
       >
         <TRPCReactProvider headers={headers()}>
           <ThemeProvider
