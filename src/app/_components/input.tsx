@@ -11,6 +11,7 @@ import { Edit } from "./edit";
 const Input = () => {
   const submission = api.suggestion.submit.useMutation();
   const [input, setInput] = useState("");
+  const [meta_input, setMetaInput] = useState("");
   const [events, setEvents] = useState<EditEvent[]>([]);
   const [editLoading, setEditLoading] = useState(false);
   const [selected, setSelected] = useState<string>("");
@@ -42,23 +43,42 @@ const Input = () => {
     <div className="grid h-full w-full grid-cols-16 gap-4">
       {/* Input */}
       <div className="col-span-11 flex h-full flex-col">
-        <Textarea
-          value={input}
-          onChange={(v) => setInput(v.target.value)}
-          className="h-full resize-none font-mono text-lg selection:bg-accent"
-          placeholder="Start typing..."
-          // A tad annoying, but React seems to have its types mixed up
-          onSelect={(e) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-            const selected: string = (e as any).target.value.substring(
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-              (e as any).target.selectionStart,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-              (e as any).target.selectionEnd,
-            );
-            setSelected(selected);
-          }}
-        />
+        <>
+          <Textarea
+            value={meta_input}
+            onChange={(v) => setMetaInput(v.target.value)}
+            className="h-2 mb-3 resize-none font-mono text-lg selection:bg-accent"
+            placeholder="What are you writing about?"
+            // A tad annoying, but React seems to have its types mixed up
+            onSelect={(e) => {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+              const selected: string = (e as any).target.value.substring(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+                (e as any).target.selectionStart,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+                (e as any).target.selectionEnd,
+              );
+              setSelected(selected);
+            }}
+          />
+          <Textarea
+            value={input}
+            onChange={(v) => setInput(v.target.value)}
+            className="h-full resize-none font-mono text-lg selection:bg-accent"
+            placeholder="Let your imagination go wild..."
+            // A tad annoying, but React seems to have its types mixed up
+            onSelect={(e) => {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+              const selected: string = (e as any).target.value.substring(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+                (e as any).target.selectionStart,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+                (e as any).target.selectionEnd,
+              );
+              setSelected(selected);
+            }}
+          />
+        </>
       </div>
       {/* Editors */}
       <div className="group mt-4 flex h-full flex-col items-center gap-1">
@@ -81,6 +101,7 @@ const Input = () => {
                   {
                     editorType: editor.value,
                     text: selected.length > 0 ? selected : input,
+                    metaText: meta_input,
                   },
                   {
                     onSuccess: (data) => {
@@ -97,7 +118,7 @@ const Input = () => {
             >
               <editor.icon size={"36"} />
             </Button>
-            <p className="mt-[-4px] w-full text-center text-sm opacity-0 transition-opacity group-hover:opacity-100">
+            <p className="mt-[-4px] w-full text-center text-xs text-mono opacity-0 transition-opacity group-hover:opacity-100">
               {editor.display}
             </p>
             <div className="space-y-1"></div>
