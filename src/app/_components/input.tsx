@@ -63,9 +63,8 @@ const Input = () => {
       {/* Editors */}
       <div className="group mt-4 flex h-full flex-col items-center gap-1">
         {Editors.map((editor) => (
-          <>
+          <div key={editor.value} className="text-center">
             <Button
-              key={editor.value}
               variant="ghost"
               className="h-16 w-16 hover:bg-accent/50"
               onClick={() => {
@@ -84,6 +83,7 @@ const Input = () => {
                   },
                   {
                     onSuccess: (data) => {
+                      console.log("received:", data);
                       handleNewEvent({
                         id: pendingID,
                         input: selected.length > 0 ? selected : input,
@@ -97,11 +97,10 @@ const Input = () => {
             >
               <editor.icon size={"36"} />
             </Button>
-            <p className="mt-[-4px] w-full text-center text-sm opacity-0 transition-opacity group-hover:opacity-100">
+            <p className="w-full text-sm opacity-0 transition-opacity group-hover:opacity-100">
               {editor.display}
             </p>
-            <div className="space-y-1"></div>
-          </>
+          </div>
         ))}
       </div>
       {/* Suggestion */}
