@@ -9,12 +9,18 @@ import { Edit } from "./edit";
 import React from "react";
 import { type ChatCompletionMessage } from "openai/resources";
 
+interface selected {
+  start: number;
+  end: number;
+  value: string;
+}
+
 const Input = () => {
   const submission = api.suggestion.submit.useMutation();
   const [input, setInput] = useState("");
   const [metaInput, setMetaInput] = useState("");
   const [events, setEvents] = useState<EditEvent[]>([]);
-  const [selected, setSelected] = useState<string>("");
+  const [selected, setSelected] = useState<selected>({ start: 0, end: 0, value: "" });
 
   const eventsRef = useRef<EditEvent[]>();
   eventsRef.current = events;
@@ -52,28 +58,27 @@ const Input = () => {
       setEvents([...allEvents]);
   };
 
-
   const mutationCallback = React.useCallback((data: ChatCompletionMessage | undefined, pendingID: string, editType: EditorType) => {
     updatePendingEvent({
       id: pendingID,
-      input: selected.length > 0 ? selected : input,
+      input: selected.value.length > 0 ? selected.value : input,
       output: data?.content ?? "",
       editType: editType,
     });
   }, [input, selected]);
 
-  const handleClick = async (type: EditorType) => {
+  const handleEditorClick = async (type: EditorType) => {
     const pendingID = crypto.randomUUID();
     // Add a pending event.
     addPendingEvent({
       id: pendingID,
-      input: selected.length > 0 ? selected : input,
+      input: selected.value.length > 0 ? selected.value : input,
       output: "",
       editType: type,
     });
     const result = await submission.mutateAsync(
       {
-        text: selected.length > 0 ? selected : input,
+        text: selected.value.length > 0 ? selected.value : input,
         editorType: type,
         metaText: metaInput,
       }
@@ -87,37 +92,26 @@ const Input = () => {
       <div className="col-span-11 flex h-full flex-col">
         <>
           <Textarea
-            value={metaInput}
+            defaultValue={metaInput}
             onChange={(v) => setMetaInput(v.target.value)}
             className="h-2 mb-3 resize-none font-mono text-lg selection:bg-accent"
             placeholder="What are you writing about?"
-            // A tad annoying, but React seems to have its types mixed up
-            onSelect={(e) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-              const selected: string = (e as any).target.value.substring(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-                (e as any).target.selectionStart,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-                (e as any).target.selectionEnd,
-              );
-              setSelected(selected);
-            }}
           />
           <Textarea
             value={input}
             onChange={(v) => setInput(v.target.value)}
             className="h-full resize-none font-mono text-lg selection:bg-accent"
             placeholder="Let your imagination go wild..."
-            // A tad annoying, but React seems to have its types mixed up
-            onSelect={(e) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-              const selected: string = (e as any).target.value.substring(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-                (e as any).target.selectionStart,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-                (e as any).target.selectionEnd,
+            onSelect={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+              const selectedText = e.target.value.substring(
+                e.target.selectionStart,
+                e.target.selectionEnd,
               );
-              setSelected(selected);
+              setSelected({
+                value: selectedText,
+                start: e.target.selectionStart,
+                end: e.target.selectionEnd,
+              });
             }}
           />
         </>
@@ -130,7 +124,7 @@ const Input = () => {
             <Button
               variant="ghost"
               className="h-16 w-16 hover:bg-accent/50"
-              onClick={() => handleClick(editor.value)}
+              onClick={() => handleEditorClick(editor.value)}
             >
               <editor.icon size={"36"} />
             </Button>
