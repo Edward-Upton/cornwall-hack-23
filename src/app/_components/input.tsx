@@ -1,45 +1,25 @@
 "use client";
 
-import {
-  AlignVerticalSpaceAround,
-  List,
-  BookOpenText,
-  type LucideIcon,
-} from "lucide-react";
+import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { type EditorType } from "~/lib/editors-types";
+import { type EditEvent, Editors } from "~/lib/editors-types";
 import { api } from "~/trpc/react";
-import TextAnim from "./text-anim";
-
-const editors: {
-  display: string;
-  value: EditorType;
-  icon: LucideIcon;
-}[] = [
-  {
-    display: "Expand",
-    value: "expansion",
-    icon: List,
-  },
-  {
-    display: "Summarise",
-    value: "summarise",
-    icon: AlignVerticalSpaceAround,
-  },
-  {
-    display: "Cite",
-    value: "cite",
-    icon: BookOpenText,
-  },
-];
+import { Edit } from "./edit";
 
 const Input = () => {
   const submission = api.suggestion.submit.useMutation();
   const [input, setInput] = useState("");
+  const [events, setEvents] = useState<EditEvent[]>([]);
+  const [editLoading, setEditLoading] = useState(false);
   const [selected, setSelected] = useState<string>("");
-  const [result, setResult] = useState("");
+
+  const handleNewEvent = (newEvent: EditEvent) => {
+    const eventsLog = [...events, newEvent];
+    setEvents(eventsLog);
+    setEditLoading(false);
+  }
 
   return (
     <div className="grid h-full w-full grid-cols-16 gap-4">
@@ -62,28 +42,27 @@ const Input = () => {
           }}
         />
         {selected}
-        <TextAnim text={result} duration={5} />
       </div>
-      {/* Modas */}
+      {/* Editors */}
       <div className="group flex h-full flex-col gap-2">
-        {editors.map((editor) => (
+        {Editors.map((editor) => (
           <Button
             key={editor.value}
             variant="ghost"
             className="h-16 hover:bg-accent/50"
-            onClick={() =>
-              submission.mutate(
-                {
-                  editorType: editor.value,
-                  text: selected.length > 0 ? selected : input,
-                },
-                {
-                  onSuccess: (data) => {
-                    setResult(data?.content ?? "");
-                  },
-                },
-              )
-            }
+            onClick={() => {
+              setEditLoading(true);
+              submission.mutate({
+                editorType: editor.value,
+                text: selected.length > 0 ? selected : input,
+              }, {
+                onSuccess: (data) => { handleNewEvent({
+                  input: selected.length > 0 ? selected : input, 
+                  output: data?.content ?? "",
+                  editType: editor.value,
+                })}
+              })
+            }}
           >
             <div className="space-y-3 px-2">
               <editor.icon className="w-full" />
@@ -96,10 +75,19 @@ const Input = () => {
       </div>
       {/* Suggestion */}
       <div className="col-span-4 flex h-full flex-col gap-2">
-        <Textarea
-          value={result}
-          className="grow resize-none font-mono text-lg"
-        />
+        {editLoading && (
+          <div className="bg-primary flex rounded-md justify-center items-center h-16">
+            <p className="text-sm text-primary-foreground">Loading...</p>
+            <LoaderIcon className="w-6 h-6 ml-2 animate-spin text-accent" />
+          </div>
+        )}
+        {events.map((event) => {
+          const uuid = crypto.randomUUID(); 
+
+          return (
+            <Edit key={uuid} event={event} events={events} setEvents={setEvents} setInput={setInput} />
+          );
+        })}
       </div>
     </div>
   );
