@@ -12,6 +12,10 @@ export const getSummary = async (input: string) => {
           {
             "role": "system",
             "content": "You are an expert in creative writing. You will interact with a user who is currently writing their work. \n\nYou will be shown some text by the user. You must improve the users writing by compressing their text into a short text. Ensure that as much information is included as possible.\nIf you can confidently find the correct overarching message the text is trying to convey, feel free to describe that instead.\nTry to compress the text down two or three sentences max."
+          },
+          {
+              "role": "user",
+              "content": input
           }
         ],
         temperature: 1,
