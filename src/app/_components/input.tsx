@@ -1,7 +1,7 @@
 "use client";
 
 import { LoaderIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { type EditEvent, Editors } from "~/lib/editors-types";
@@ -15,23 +15,37 @@ const Input = () => {
   const [editLoading, setEditLoading] = useState(false);
   const [selected, setSelected] = useState<string>("");
 
+  useEffect(() => {
+    setInput("When we think about an entity's ability to dictate the arrangement of the atoms in our lightcone, we might be tempted to boil that capacity down to a single value like 'Intelligence' or 'IQ'. I don't think this is a helpful way of thinking about the problem.");
+  }, []);
+
   // Handle new event checks if a pending event for the ID
   const handleNewEvent = (newEvent: EditEvent) => {
     // Search for the pending event
     const pendingEvent =
       events.find((event) => event.id === newEvent.id) ?? null;
 
+    if (pendingEvent) {
+    } else {
+    }
+
     const allEvents = [...events];
 
     if (pendingEvent) {
+      console.log("Found pending event; id: " + pendingEvent.id);
+      console.log("Removing pending event: ", allEvents);
       allEvents.splice(events.indexOf(pendingEvent), 1);
+      console.log("Removed pending event: ", allEvents);
       pendingEvent.id = newEvent.id;
       pendingEvent.input = newEvent.input;
       pendingEvent.output = newEvent.output;
       pendingEvent.editType = newEvent.editType;
       allEvents.push(pendingEvent);
     } else {
+      console.log("No pending event found");
+      console.log("Adding new event: ", allEvents.length);
       allEvents.push(newEvent);
+      console.log("Added new event: ", allEvents.length);
     }
 
     setEvents(allEvents);
@@ -70,6 +84,7 @@ const Input = () => {
               onClick={() => {
                 const pendingID = crypto.randomUUID();
                 setEditLoading(true);
+                // Add a pending event.
                 handleNewEvent({
                   id: pendingID,
                   input: selected.length > 0 ? selected : input,
@@ -103,7 +118,7 @@ const Input = () => {
           </div>
         ))}
       </div>
-      {/* Suggestion */}
+      {/* Edit events */}
       <div className="col-span-4 flex h-full flex-col gap-2">
         {editLoading && (
           <div className="flex h-16 items-center justify-center rounded-md bg-primary">
@@ -113,7 +128,7 @@ const Input = () => {
         )}
         {events.map((event) => (
           <Edit
-            key={crypto.randomUUID()}
+            key={event.id}
             event={event}
             events={events}
             setEvents={setEvents}
