@@ -25,21 +25,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <TRPCReactProvider headers={headers()}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <body
-            className={`relative flex h-screen flex-col bg-background font-sans text-foreground ${inter.variable}`}
+      <body
+        className={`relative flex h-screen flex-col bg-background font-sans text-foreground ${inter.variable}`}
+      >
+        <TRPCReactProvider headers={headers()}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
             <Nav />
             <div className="flex-1 px-64 py-32">{children}</div>
-          </body>
-        </ThemeProvider>
-      </TRPCReactProvider>
+          </ThemeProvider>
+        </TRPCReactProvider>{" "}
+      </body>
     </html>
   );
 }
