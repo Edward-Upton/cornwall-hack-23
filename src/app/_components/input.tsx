@@ -57,7 +57,6 @@ const Input = () => {
             setSelected(selected);
           }}
         />
-        {selected}
       </div>
       {/* Editors */}
       <div className="group flex h-full flex-col gap-2">

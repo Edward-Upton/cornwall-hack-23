@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, FileQuestion, X } from "lucide-react";
+import { Check, FileQuestion, LoaderIcon, X } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { Editors, type EditEvent } from "~/lib/editors-types";
@@ -39,10 +39,17 @@ export function Edit({
         <p className="text-primary-foreground">{editorName}</p>
       </div>
       <div className="">
-        <Textarea className="bg-foreground/50 text-accent">{event.output}</Textarea>
+        {event.output?.length > 0 ? (
+          <Textarea className="bg-foreground/50 text-accent">{event.output}</Textarea>
+          ): (
+            <div className="bg-primary flex rounded-md justify-center items-center h-16">
+              <LoaderIcon className="w-6 h-6 animate-spin text-accent"/>
+            </div>
+          )
+          }
       </div>
       <div className="flex justify-end gap-2 space-2">
-        <Button className="bg-green-500 hover:bg-green-600" onClick={handleAccept}>
+        <Button className="bg-green-500 hover:bg-green-600" disabled={event.output == ""} onClick={handleAccept}>
           <Check />
         </Button>
         <Button className="bg-red-500 hover:bg-red-600" onClick={handleReject}>
