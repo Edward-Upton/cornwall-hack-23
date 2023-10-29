@@ -1,7 +1,6 @@
 // This code is for v4 of the openai package: npmjs.com/package/openai
 import { query } from "~/server/openai-wrapper";
 
-
 export const getCitation = async (input: string) => {
   const response = await query({
     model: "gpt-4",
