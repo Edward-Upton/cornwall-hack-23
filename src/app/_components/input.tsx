@@ -1,11 +1,17 @@
 "use client";
 
-import {AlignVerticalSpaceAround, List, BookOpenText, type LucideIcon} from "lucide-react";
-import {useState} from "react";
-import {Button} from "~/components/ui/button";
-import {Textarea} from "~/components/ui/textarea";
-import {type EditorType} from "~/lib/editors-types";
-import {api} from "~/trpc/react";
+import {
+  AlignVerticalSpaceAround,
+  List,
+  BookOpenText,
+  type LucideIcon,
+} from "lucide-react";
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
+import { Textarea } from "~/components/ui/textarea";
+import { type EditorType } from "~/lib/editors-types";
+import { api } from "~/trpc/react";
+import TextAnim from "./text-anim";
 
 const editors: {
   display: string;
@@ -43,6 +49,7 @@ const Input = () => {
           onChange={(v) => setInput(v.target.value)}
           className="h-full resize-none font-mono text-lg"
         />
+        <TextAnim text={result} duration={5} />
       </div>
       {/* Modas */}
       <div className="group flex h-full flex-col gap-2">
@@ -52,18 +59,21 @@ const Input = () => {
             variant="ghost"
             className="h-16 hover:bg-accent/50"
             onClick={() =>
-              submission.mutate({
-                editorType: editor.value,
-                text: input,
-              }, {
-                onSuccess: (data) => {
-                  setResult(data?.content ?? "");
-                }
-              })
+              submission.mutate(
+                {
+                  editorType: editor.value,
+                  text: input,
+                },
+                {
+                  onSuccess: (data) => {
+                    setResult(data?.content ?? "");
+                  },
+                },
+              )
             }
           >
             <div className="space-y-3 px-2">
-              <editor.icon className="w-full"/>
+              <editor.icon className="w-full" />
               <p className="text-sm opacity-0 transition-opacity group-hover:opacity-100">
                 {editor.display}
               </p>
