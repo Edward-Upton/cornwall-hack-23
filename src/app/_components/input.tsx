@@ -1,6 +1,6 @@
 "use client";
 
-import { AlignVerticalSpaceAround, List, type LucideIcon } from "lucide-react";
+import { AlignVerticalSpaceAround, ArrowUpDown, type LucideIcon, Expand, Minimize, Minimize2, KanbanSquare, Lightbulb } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
@@ -13,14 +13,24 @@ const editors: {
   icon: LucideIcon;
 }[] = [
   {
+    display: "Brainstorm",
+    value: "brainstorm",
+    icon: Lightbulb,
+  },
+  {
+    display: "Structure",
+    value: "structure",
+    icon: KanbanSquare,
+  },
+  {
     display: "Expand",
     value: "expansion",
-    icon: List,
+    icon: Expand,
   },
   {
     display: "Summarise",
     value: "summarise",
-    icon: AlignVerticalSpaceAround,
+    icon: Minimize2,
   },
 ];
 

@@ -1,5 +1,5 @@
 # Expander Editor
-This editor is used to exapnd upon points made by the writer.
+This editor is used to expand upon points made by the writer.
 
 ### Example input
 GPT training data is not limited to human-generated text
