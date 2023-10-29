@@ -40,7 +40,7 @@ export function Edit({
       </div>
       <div className="">
         {event.output?.length > 0 ? (
-          <Textarea className="bg-foreground/50 text-accent">{event.output}</Textarea>
+          <Textarea className="bg-foreground/50 text-accent" defaultValue={event.output}></Textarea>
           ): (
             <div className="bg-primary flex rounded-md justify-center items-center h-16">
               <LoaderIcon className="w-6 h-6 animate-spin text-accent"/>
