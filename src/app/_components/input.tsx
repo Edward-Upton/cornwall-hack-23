@@ -11,7 +11,7 @@ import { Edit } from "./edit";
 const Input = () => {
   const submission = api.suggestion.submit.useMutation();
   const [input, setInput] = useState("");
-  const [meta_input, setMetaInput] = useState("");
+  const [metaInput, setMetaInput] = useState("");
   const [events, setEvents] = useState<EditEvent[]>([]);
   const [editLoading, setEditLoading] = useState(false);
   const [selected, setSelected] = useState<string>("");
@@ -101,7 +101,7 @@ const Input = () => {
                   {
                     editorType: editor.value,
                     text: selected.length > 0 ? selected : input,
-                    metaText: meta_input,
+                    metaText: metaInput,
                   },
                   {
                     onSuccess: (data) => {

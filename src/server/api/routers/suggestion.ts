@@ -34,6 +34,7 @@ export const suggestionRouter = createTRPCRouter({
           completion = await getBrainstorm(input.text, input.metaText);
           break;
         case "cite":
+          // TODO: Add metaText to getCitation
           completion = await getCitation(input.text);
           break;
       }
