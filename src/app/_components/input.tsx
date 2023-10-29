@@ -8,12 +8,12 @@ import { type EditEvent, Editors } from "~/lib/editors-types";
 import { api } from "~/trpc/react";
 import { Edit } from "./edit";
 
-
 const Input = () => {
   const submission = api.suggestion.submit.useMutation();
   const [input, setInput] = useState("");
   const [events, setEvents] = useState<EditEvent[]>([]);
   const [editLoading, setEditLoading] = useState(false);
+  const [selected, setSelected] = useState<string>("");
 
   const handleNewEvent = (newEvent: EditEvent) => {
     const eventsLog = [...events, newEvent];
@@ -22,14 +22,26 @@ const Input = () => {
   }
 
   return (
-    <div className="grid-cols-16 grid h-full w-full gap-4">
+    <div className="grid h-full w-full grid-cols-16 gap-4">
       {/* Input */}
-      <div className="col-span-11 h-full">
+      <div className="col-span-11 flex h-full flex-col">
         <Textarea
           value={input}
           onChange={(v) => setInput(v.target.value)}
           className="h-full resize-none font-mono text-lg"
+          // A tad annoying, but React seems to have its types mixed up
+          onSelect={(e) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+            const selected: string = (e as any).target.value.substring(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+              (e as any).target.selectionStart,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+              (e as any).target.selectionEnd,
+            );
+            setSelected(selected);
+          }}
         />
+        {selected}
       </div>
       {/* Editors */}
       <div className="group flex h-full flex-col gap-2">
@@ -42,10 +54,10 @@ const Input = () => {
               setEditLoading(true);
               submission.mutate({
                 editorType: editor.value,
-                text: input,
+                text: selected.length > 0 ? selected : input,
               }, {
                 onSuccess: (data) => { handleNewEvent({
-                  input: input,
+                  input: selected.length > 0 ? selected : input, 
                   output: data?.content ?? "",
                   editType: editor.value,
                 })}

@@ -1,7 +1,7 @@
 import { AlignVerticalSpaceAround, List, type LucideIcon } from "lucide-react";
 import { z } from "zod";
 
-export const EditorTypes = z.enum(["expansion", "points", "summarise"]);
+export const EditorTypes = z.enum(["expansion", "points", "summarise", "cite"]);
 export type EditorType = z.infer<typeof EditorTypes>;
 
 export interface EditEvent {
