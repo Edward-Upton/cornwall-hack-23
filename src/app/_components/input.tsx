@@ -44,8 +44,8 @@ const Input = () => {
   return (
     <div className="grid h-full w-full grid-cols-16 gap-4">
       {/* Input */}
-      <div className="col-span-11 h-full">
-        <input
+      <div className="col-span-11 flex h-full flex-col">
+        <Textarea
           value={input}
           onChange={(v) => setInput(v.target.value)}
           className="h-full resize-none font-mono text-lg"
