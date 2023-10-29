@@ -48,7 +48,7 @@ const Input = () => {
         <Textarea
           value={input}
           onChange={(v) => setInput(v.target.value)}
-          className="h-full resize-none font-mono text-lg"
+          className="h-full resize-none font-mono text-lg selection:bg-accent"
           // A tad annoying, but React seems to have its types mixed up
           onSelect={(e) => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
