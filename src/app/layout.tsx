@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Cornwall Hack 23",
+  title: "rubberduck.sh",
   description: "",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
