@@ -28,7 +28,7 @@ const Input = () => {
         <Textarea
           value={input}
           onChange={(v) => setInput(v.target.value)}
-          className="h-full resize-none font-mono text-lg selection:bg-accent"
+          className="h-full resize-none font-mono text-lg"
           // A tad annoying, but React seems to have its types mixed up
           onSelect={(e) => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
@@ -57,7 +57,7 @@ const Input = () => {
                 text: selected.length > 0 ? selected : input,
               }, {
                 onSuccess: (data) => { handleNewEvent({
-                  input: selected.length > 0 ? selected : input,
+                  input: selected.length > 0 ? selected : input, 
                   output: data?.content ?? "",
                   editType: editor.value,
                 })}
@@ -82,7 +82,7 @@ const Input = () => {
           </div>
         )}
         {events.map((event) => {
-          const uuid = crypto.randomUUID();
+          const uuid = crypto.randomUUID(); 
 
           return (
             <Edit key={uuid} event={event} events={events} setEvents={setEvents} setInput={setInput} />

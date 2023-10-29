@@ -24,10 +24,10 @@ export default async function Nav() {
         {/* Navigation */}
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
-            <ActiveLink href="/" display="Home" />
+            <ActiveLink href="/" display="home" />
           </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <ActiveLink href="/components" display="Components" />
+          <Button variant="link" size="sm" asChild>
+            <ActiveLink href="/components" display="components" />
           </Button>
         </div>
       </div>

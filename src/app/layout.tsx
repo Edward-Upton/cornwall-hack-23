@@ -36,7 +36,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Nav />
-            <div className="flex-1 px-64 py-32">{children}</div>
+            <div className="flex-1 px-64 py-32 font-mono">{children}</div>
           </ThemeProvider>
         </TRPCReactProvider>{" "}
       </body>

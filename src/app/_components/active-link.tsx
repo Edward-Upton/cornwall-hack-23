@@ -14,7 +14,7 @@ const ActiveLink = ({
   const isActive = path === props.href;
 
   return (
-    <Link {...props} className={isActive ? "underline" : ""}>
+    <Link {...props} className={isActive ? "bg-accent p-2 rounded-md" : "p-2"}>
       {display}
     </Link>
   );
