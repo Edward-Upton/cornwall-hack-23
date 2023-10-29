@@ -3,7 +3,7 @@ import { query } from "~/server/openai-wrapper";
 
 export const getCitation = async (input: string) => {
   const response = await query({
-    model: "gpt-4",
+    model: "gpt-3.5-turbo",
     messages: [
       {
         role: "system",
