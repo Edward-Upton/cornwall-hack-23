@@ -32,11 +32,6 @@ export const suggestionRouter = createTRPCRouter({
         case "brainstorm":
           completion = await getBrainstorm(input.text);
           break;
-        // completion = await getBulletPoints(input.text);
-        case "summarise":
-          completion = await getExpansion(input.text);
-          break;
-        // completion = await getSummarisation(input.text);
         case "cite":
           completion = await getCitation(input.text);
           break;
