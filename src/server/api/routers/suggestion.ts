@@ -18,14 +18,16 @@ export const suggestionRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       var completion;
 
-      // Switch on editor type
+      // Perform the mutation specified by the EditorType.
       switch (input.editorType) {
-        case "summarise":
-          completion = await getExpansion(input.text);
         case "expansion":
           completion = await getExpansion(input.text);
-        default:
+        case "points":
           completion = await getExpansion(input.text);
+          // completion = await getBulletPoints(input.text);
+        case "summarise":
+          completion = await getExpansion(input.text);
+          // completion = await getSummarisation(input.text);
       }
 
       return completion.choices[0]?.message;
