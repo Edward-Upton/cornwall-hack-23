@@ -1,14 +1,10 @@
-import OpenAI from "openai";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { env } from "~/env.mjs";
-import { EditorTypes, type EditorType } from "~/lib/editors-types";
+import { adminProcedure, createTRPCRouter } from "../trpc";
+import { EditorTypes } from "~/lib/editors-types";
 import { getExpansion } from "~/server/editors/expander/prompt";
 
-const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
-
 export const suggestionRouter = createTRPCRouter({
-  submit: protectedProcedure
+  submit: adminProcedure
     .input(
       z.object({
         editorType: EditorTypes,
@@ -16,7 +12,7 @@ export const suggestionRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      var completion;
+      let completion;
 
       // Perform the mutation specified by the EditorType.
       switch (input.editorType) {

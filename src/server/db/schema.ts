@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
   varchar,
+  mysqlEnum,
 } from "drizzle-orm/mysql-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -18,7 +19,7 @@ import { type AdapterAccount } from "next-auth/adapters";
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const mysqlTable = mysqlTableCreator(
-  (name) => `cornwall-hack-23_${name}`,
+  (name) => `rubberduck_${name}`,
 );
 
 export const posts = mysqlTable(
@@ -47,6 +48,7 @@ export const users = mysqlTable("user", {
     fsp: 3,
   }).default(sql`CURRENT_TIMESTAMP(3)`),
   image: varchar("image", { length: 255 }),
+  role: mysqlEnum("role", ["user", "admin"]).default("user"),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
