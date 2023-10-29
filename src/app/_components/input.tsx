@@ -1,11 +1,11 @@
 "use client";
 
-import { AlignVerticalSpaceAround, List, type LucideIcon } from "lucide-react";
-import { useState } from "react";
-import { Button } from "~/components/ui/button";
-import { Textarea } from "~/components/ui/textarea";
-import { type EditorType } from "~/lib/editors-types";
-import { api } from "~/trpc/react";
+import {AlignVerticalSpaceAround, List, BookOpenText, type LucideIcon} from "lucide-react";
+import {useState} from "react";
+import {Button} from "~/components/ui/button";
+import {Textarea} from "~/components/ui/textarea";
+import {type EditorType} from "~/lib/editors-types";
+import {api} from "~/trpc/react";
 
 const editors: {
   display: string;
@@ -21,6 +21,11 @@ const editors: {
     display: "Summarise",
     value: "summarise",
     icon: AlignVerticalSpaceAround,
+  },
+  {
+    display: "Cite",
+    value: "cite",
+    icon: BookOpenText,
   },
 ];
 
@@ -58,7 +63,7 @@ const Input = () => {
             }
           >
             <div className="space-y-3 px-2">
-              <editor.icon className="w-full" />
+              <editor.icon className="w-full"/>
               <p className="text-sm opacity-0 transition-opacity group-hover:opacity-100">
                 {editor.display}
               </p>
