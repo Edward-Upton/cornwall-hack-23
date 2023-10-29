@@ -13,6 +13,7 @@ export const suggestionRouter = createTRPCRouter({
       z.object({
         editorType: EditorTypes,
         text: z.string().min(1),
+        metaText: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -21,16 +22,16 @@ export const suggestionRouter = createTRPCRouter({
       // Perform the mutation specified by the EditorType.
       switch (input.editorType) {
         case "expansion":
-          completion = await getExpansion(input.text);
+          completion = await getExpansion(input.text, input.metaText);
           break;
         case "summarise":
-          completion = await getSummary(input.text);
+          completion = await getSummary(input.text, input.metaText);
           break;
         case "structure":
-          completion = await getStructure(input.text);
+          completion = await getStructure(input.text, input.metaText);
           break;
         case "brainstorm":
-          completion = await getBrainstorm(input.text);
+          completion = await getBrainstorm(input.text, input.metaText);
           break;
         case "cite":
           completion = await getCitation(input.text);
