@@ -1,12 +1,9 @@
 "use client";
 
 import { Check, FileQuestion, X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { Editors, EditEvent } from "~/lib/editors-types";
-import { api } from "~/trpc/react";
+import { Editors, type EditEvent } from "~/lib/editors-types";
 
 export function Edit({
   event,

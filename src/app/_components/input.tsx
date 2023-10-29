@@ -1,13 +1,12 @@
 "use client";
 
-import { AlignVerticalSpaceAround, List, LoaderIcon, type LucideIcon } from "lucide-react";
+import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { EditEvent, Editors, type EditorType } from "~/lib/editors-types";
+import { type EditEvent, Editors } from "~/lib/editors-types";
 import { api } from "~/trpc/react";
 import { Edit } from "./edit";
-import { loadBindings } from "next/dist/build/swc";
 
 
 const Input = () => {
@@ -15,6 +14,12 @@ const Input = () => {
   const [input, setInput] = useState("");
   const [events, setEvents] = useState<EditEvent[]>([]);
   const [editLoading, setEditLoading] = useState(false);
+
+  const handleNewEvent = (newEvent: EditEvent) => {
+    const eventsLog = [...events, newEvent];
+    setEvents(eventsLog);
+    setEditLoading(false);
+  }
 
   return (
     <div className="grid-cols-16 grid h-full w-full gap-4">
@@ -39,21 +44,13 @@ const Input = () => {
                 editorType: editor.value,
                 text: input,
               }, {
-                onSuccess: (data) => {
-                  const newEvent = {
-                    input: input,
-                    output: data?.content ?? "",
-                    editType: editor.value,
-                  }
-                  const eventsLog = [...events, newEvent];
-                  setEvents(eventsLog);
-                  setEditLoading(false);
-                }
+                onSuccess: (data) => { handleNewEvent({
+                  input: input,
+                  output: data?.content ?? "",
+                  editType: editor.value,
+                })}
               })
-            }
-
-            }
-
+            }}
           >
             <div className="space-y-3 px-2">
               <editor.icon className="w-full" />
@@ -72,9 +69,13 @@ const Input = () => {
             <LoaderIcon className="w-6 h-6 ml-2 animate-spin text-accent" />
           </div>
         )}
-        {events.map((event) => (
-          <Edit event={event} events={events} setEvents={setEvents} setInput={setInput} />
-        ))}
+        {events.map((event) => {
+          const uuid = crypto.randomUUID(); 
+
+          return (
+            <Edit key={uuid} event={event} events={events} setEvents={setEvents} setInput={setInput} />
+          );
+        })}
       </div>
     </div>
   );

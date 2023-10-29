@@ -1,4 +1,4 @@
-import { AlignVerticalSpaceAround, List, LucideIcon } from "lucide-react";
+import { AlignVerticalSpaceAround, List, type LucideIcon } from "lucide-react";
 import { z } from "zod";
 
 export const EditorTypes = z.enum(["expansion", "points", "summarise"]);
