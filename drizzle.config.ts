@@ -8,5 +8,5 @@ export default {
   dbCredentials: {
     connectionString: env.DATABASE_URL,
   },
-  tablesFilter: ["cornwall-hack-23_*"],
+  tablesFilter: ["rubberduck_*"],
 } satisfies Config;
