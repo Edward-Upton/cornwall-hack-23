@@ -38,17 +38,30 @@ const editors: {
 const Input = () => {
   const submission = api.suggestion.submit.useMutation();
   const [input, setInput] = useState("");
+  const [selected, setSelected] = useState<string>("");
   const [result, setResult] = useState("");
 
   return (
-    <div className="grid-cols-16 grid h-full w-full gap-4">
+    <div className="grid h-full w-full grid-cols-16 gap-4">
       {/* Input */}
       <div className="col-span-11 h-full">
-        <Textarea
+        <input
           value={input}
           onChange={(v) => setInput(v.target.value)}
           className="h-full resize-none font-mono text-lg"
+          // A tad annoying, but React seems to have its types mixed up
+          onSelect={(e) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+            const selected: string = (e as any).target.value.substring(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+              (e as any).target.selectionStart,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+              (e as any).target.selectionEnd,
+            );
+            setSelected(selected);
+          }}
         />
+        {selected}
         <TextAnim text={result} duration={5} />
       </div>
       {/* Modas */}
@@ -62,7 +75,7 @@ const Input = () => {
               submission.mutate(
                 {
                   editorType: editor.value,
-                  text: input,
+                  text: selected.length > 0 ? selected : input,
                 },
                 {
                   onSuccess: (data) => {
