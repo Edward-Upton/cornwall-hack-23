@@ -22,18 +22,24 @@ export const suggestionRouter = createTRPCRouter({
       switch (input.editorType) {
         case "expansion":
           completion = await getExpansion(input.text);
+          break;
         case "summarise":
           completion = await getSummary(input.text);
+          break;
         case "structure":
           completion = await getStructure(input.text);
+          break;
         case "brainstorm":
           completion = await getBrainstorm(input.text);
+          break;
         // completion = await getBulletPoints(input.text);
         case "summarise":
           completion = await getExpansion(input.text);
+          break;
         // completion = await getSummarisation(input.text);
         case "cite":
           completion = await getCitation(input.text);
+          break;
       }
 
       return completion.choices[0]?.message;
