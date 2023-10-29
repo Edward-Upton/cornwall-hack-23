@@ -15,9 +15,25 @@ const Input = () => {
   const [editLoading, setEditLoading] = useState(false);
   const [selected, setSelected] = useState<string>("");
 
+  // Handle new event checks if a pending event for the ID 
   const handleNewEvent = (newEvent: EditEvent) => {
-    const eventsLog = [...events, newEvent];
-    setEvents(eventsLog);
+    // Search for the pending event
+    const pendingEvent = events.find((event) => event.id === newEvent.id) ?? null;
+
+    const allEvents = [...events];
+
+    if (pendingEvent) {
+      allEvents.splice(events.indexOf(pendingEvent), 1);
+      pendingEvent.id = newEvent.id;
+      pendingEvent.input = newEvent.input;
+      pendingEvent.output = newEvent.output;
+      pendingEvent.editType = newEvent.editType;
+      allEvents.push(pendingEvent);
+    } else {
+      allEvents.push(newEvent);
+    }
+
+    setEvents(allEvents);
     setEditLoading(false);
   }
 
@@ -51,12 +67,20 @@ const Input = () => {
             variant="ghost"
             className="h-16 hover:bg-accent/50"
             onClick={() => {
+              const pendingID = crypto.randomUUID();
               setEditLoading(true);
+              handleNewEvent({
+                id: pendingID,
+                input: selected.length > 0 ? selected : input,
+                output: "",
+                editType: editor.value,
+              })
               submission.mutate({
                 editorType: editor.value,
                 text: selected.length > 0 ? selected : input,
               }, {
                 onSuccess: (data) => { handleNewEvent({
+                  id: pendingID,
                   input: selected.length > 0 ? selected : input, 
                   output: data?.content ?? "",
                   editType: editor.value,
@@ -81,13 +105,9 @@ const Input = () => {
             <LoaderIcon className="w-6 h-6 ml-2 animate-spin text-accent" />
           </div>
         )}
-        {events.map((event) => {
-          const uuid = crypto.randomUUID(); 
-
-          return (
-            <Edit key={uuid} event={event} events={events} setEvents={setEvents} setInput={setInput} />
-          );
-        })}
+        {events.map((event) => (
+          <Edit key={crypto.randomUUID()} event={event} events={events} setEvents={setEvents} setInput={setInput} />
+        ))}
       </div>
     </div>
   );

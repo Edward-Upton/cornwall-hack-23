@@ -17,6 +17,7 @@ export const EditorTypes = z.enum([
 export type EditorType = z.infer<typeof EditorTypes>;
 
 export interface EditEvent {
+  id: string;
   input: string;
   output: string;
   editType: EditorType;
