@@ -158,7 +158,6 @@ const Input = () => {
             event={event}
             events={events}
             setEvents={setEvents}
-            // setInput={setInput}
             replacementCallback={replaceText}
           />
         ))}
