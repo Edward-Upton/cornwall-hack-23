@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { files } from "~/server/db/schema";
 import { z } from "zod";
 import { utapi } from "~/server/uploadthing";
+import { deleteEmbeddingsForFile } from "~/server/embeddings/langchain/delete-embeddings-for-file";
 
 export const filesRouter = createTRPCRouter({
   getUserFiles: protectedProcedure.query(async ({ ctx }) => {
@@ -29,6 +30,8 @@ export const filesRouter = createTRPCRouter({
 
       await utapi.deleteFiles([input.key]);
       await ctx.db.delete(files).where(eq(files.key, input.key));
+      // Delete embeddings
+      await deleteEmbeddingsForFile(file.key, userId);
 
       return true;
     }),
