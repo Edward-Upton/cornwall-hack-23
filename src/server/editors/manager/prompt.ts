@@ -9,7 +9,7 @@ export const getManager = async (input: string, metaInput: string) => {
   const messages = construct_editor_messages(input, metaInput, managerTaskMsg);
   
   const manager_response = await query({
-    model: "gpt-4",
+    model: "gpt-3.5-turbo",
     messages: messages,
     temperature: 1,
     max_tokens: 500,
