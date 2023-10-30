@@ -22,10 +22,21 @@ const Input = () => {
   const [events, setEvents] = useState<EditEvent[]>([]);
   const [selected, setSelected] = useState<selected>({ start: 0, end: 0, value: "" });
 
+  const replaceText = (start: number, end: number, replacement: string) => {
+    if (start === 0 && end === 0) {
+      setInput(replacement);
+    } else {
+      setInput((prev) => {
+        return prev.substring(0, start) + replacement + prev.substring(end);
+      });
+    }
+  }
+
   const eventsRef = useRef<EditEvent[]>();
   eventsRef.current = events;
 
   useEffect(() => {
+    setMetaInput("Intelligence, Humanity and AI: A Conversation")
     setInput("When we think about an entity's ability to dictate the arrangement of the atoms in our lightcone, we might be tempted to boil that capacity down to a single value like 'Intelligence' or 'IQ'. I don't think this is a helpful way of thinking about the problem.");
   }, []);
 
@@ -64,6 +75,8 @@ const Input = () => {
       input: selected.value.length > 0 ? selected.value : input,
       output: data?.content ?? "",
       editType: editType,
+      start: selected.value.length > 0 ? selected.start : 0,
+      end: selected.value.length > 0 ? selected.end : 0,
     });
   }, [input, selected]);
 
@@ -75,6 +88,8 @@ const Input = () => {
       input: selected.value.length > 0 ? selected.value : input,
       output: "",
       editType: type,
+      start: selected.value.length > 0 ? selected.start : 0,
+      end: selected.value.length > 0 ? selected.end : 0,
     });
     const result = await submission.mutateAsync(
       {
@@ -143,7 +158,7 @@ const Input = () => {
             event={event}
             events={events}
             setEvents={setEvents}
-            setInput={setInput}
+            replacementCallback={replaceText}
           />
         ))}
       </div>

@@ -21,6 +21,8 @@ export interface EditEvent {
   input: string;
   output: string;
   editType: EditorType;
+  start?: number;
+  end?: number;
 }
 
 export const Editors: {
