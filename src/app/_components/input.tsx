@@ -8,6 +8,7 @@ import { api } from "~/trpc/react";
 import { Edit } from "./edit";
 import React from "react";
 import { type ChatCompletionMessage } from "openai/resources";
+import UploadFile from "./upload-file";
 
 interface selected {
   start: number;
@@ -21,6 +22,22 @@ const Input = () => {
   const [metaInput, setMetaInput] = useState("");
   const [events, setEvents] = useState<EditEvent[]>([]);
   const [selected, setSelected] = useState<selected>({ start: 0, end: 0, value: "" });
+  const [files, setFiles] = useState<
+    { key: string; url: string; name: string }[]
+  >([]);
+
+  const filesQuery = api.files.getUserFiles.useQuery();
+  const deleteFileMutation = api.files.deleteFile.useMutation();
+
+  useEffect(() => {
+    setFiles(
+      filesQuery.data?.map((file) => ({
+        key: file.key,
+        url: file.url,
+        name: file.name,
+      })) ?? [],
+    );
+  }, [filesQuery.data]);
 
   const replaceText = (start: number, end: number, replacement: string) => {
     if (start === 0 && end === 0) {
@@ -44,29 +61,29 @@ const Input = () => {
   const addPendingEvent = (event: EditEvent) => {
     eventsRef.current = [...events, event];
     setEvents([...events, event]);
-  }
+  };
 
   // Update the pending event when the API request finishes.
   const updatePendingEvent = (newEvent: EditEvent) => {
     // Get the updated list of events from the ref.
-      const allEvents = eventsRef.current;
+    const allEvents = eventsRef.current;
 
-      if (!allEvents) {
-        throw new Error("Events ref is undefined. This should never happen.");
-      }
+    if (!allEvents) {
+      throw new Error("Events ref is undefined. This should never happen.");
+    }
 
-      // Find the pending event using the UUID.
-      const pendingEvent = allEvents.findIndex((e) => e.id === newEvent.id);
+    // Find the pending event using the UUID.
+    const pendingEvent = allEvents.findIndex((e) => e.id === newEvent.id);
 
-      if (pendingEvent === undefined) {
-        throw new Error("Pending event not found. This should never happen.");
-      }
+    if (pendingEvent === undefined) {
+      throw new Error("Pending event not found. This should never happen.");
+    }
 
-      // Replace the pending event with the new event that has the API response.
-      allEvents.splice(pendingEvent, 1, newEvent);
+    // Replace the pending event with the new event that has the API response.
+    allEvents.splice(pendingEvent, 1, newEvent);
 
-      eventsRef.current = allEvents;
-      setEvents([...allEvents]);
+    eventsRef.current = allEvents;
+    setEvents([...allEvents]);
   };
 
   const mutationCallback = React.useCallback((data: ChatCompletionMessage | undefined, pendingID: string, editType: EditorType) => {
@@ -104,12 +121,12 @@ const Input = () => {
   return (
     <div className="grid h-full w-full grid-cols-16 gap-4">
       {/* Input */}
-      <div className="col-span-11 flex h-full flex-col">
+      <div className="col-span-11 flex h-full flex-col gap-3">
         <>
           <Textarea
             defaultValue={metaInput}
             onChange={(v) => setMetaInput(v.target.value)}
-            className="h-2 mb-3 resize-none font-mono text-lg selection:bg-accent"
+            className="h-2 resize-none font-mono text-lg selection:bg-accent"
             placeholder="What are you writing about?"
           />
           <Textarea
@@ -129,6 +146,50 @@ const Input = () => {
               });
             }}
           />
+          <div>
+            <UploadFile
+              onSuccess={(res) => {
+                if (!res) return;
+                const file = res[0];
+                if (!file) return;
+                setFiles((files) => [
+                  ...files,
+                  {
+                    key: file.key,
+                    url: file.url,
+                    name: file.name,
+                  },
+                ]);
+              }}
+            />
+            <div className="flex gap-2">
+              {files.map((file) => (
+                <div
+                  key={file.key}
+                  className="w-32 space-y-1 text-ellipsis rounded-lg bg-accent p-2 text-center"
+                >
+                  <p className="overflow-hidden text-ellipsis">{file.name}</p>
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      deleteFileMutation.mutate(
+                        { key: file.key },
+                        {
+                          onSuccess: () => {
+                            setFiles((files) =>
+                              files.filter((f) => f.key !== file.key),
+                            );
+                          },
+                        },
+                      )
+                    }
+                  >
+                    Delete
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
         </>
       </div>
 
