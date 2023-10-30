@@ -138,9 +138,9 @@ const Input = () => {
     <div className="mx-auto rounded-xl shadow-md md:max-w-8xl">
       <div className="md:flex">
         <div className="">
-          <div className="h-24 w-full flex flex-row flex-wrap object-cover md:h-full md:w-32 bg-inherit">
+          <div className="h-24 w-full space-y-4 flex flex-row flex-wrap object-cover md:h-full md:w-32 bg-inherit">
             {/* Editors */}
-            <div className="flex max-md:flex-row md:flex-col justify-center items-center gap-4 p-4">
+            <div className="flex max-md:flex-row md:flex-col justify-center items-center gap-4 py-4">
               {Editors.map((editor) => (
                 <div key={editor.value} className="text-center">
                   <Button
@@ -158,8 +158,7 @@ const Input = () => {
             </div>
           </div>
         </div>
-        <div className="p-8 grow">
-
+        <div className="md:p-4 grow">
           {/* Input */}
           <div className="tracking-wide text-indigo-500 mb-4 font-semibold">
             <p>type your title and a brief description to get started</p>
@@ -192,7 +191,7 @@ const Input = () => {
         </div>
 
         {/* Edit events */}
-        <div className="p-8 space-y-2">
+        <div className="py-4 space-y-2">
           {events.map((event) => (
             <Edit
               key={event.id}
