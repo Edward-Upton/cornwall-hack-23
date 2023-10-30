@@ -1,13 +1,20 @@
-import {createClient} from "redis";
+import { createClient } from "redis";
 
 export const deleteEmbeddingsForFile = async (
   fileId: string,
   userId: string,
 ) => {
-  const client = createClient({url: process.env.REDIS_URL});
+  const client = createClient({ url: process.env.REDIS_URL });
   await client.connect();
 
-  const docs = await client.ft.search("docs", `@metadata:(${userId} ${fileId})`)
+  // Escape `-`
+  const escapedUserID = userId.replace(/-/g, "\\-");
+  const escapedFileID = fileId.replace(/-/g, "\\-");
 
-  await client.del(docs.documents.map((doc) => doc.id))
-}
+  const docs = await client.ft.search(
+    "docs",
+    `@metadata:(${escapedUserID} ${escapedFileID})`,
+  );
+
+  await client.del(docs.documents.map((doc) => doc.id));
+};
