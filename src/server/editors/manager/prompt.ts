@@ -2,6 +2,7 @@
 import { query } from "~/server/openai-wrapper";
 import { construct_editor_messages } from "~/server/editors/utils";
 import { strToCompletion } from "~/server/api/routers/suggestion";
+import { EditorType } from "~/lib/editors-types";
 
 export const getManager = async (input: string, metaInput: string) => {
   
@@ -19,9 +20,9 @@ export const getManager = async (input: string, metaInput: string) => {
   });
   const manager_response_msg = manager_response.choices[0]?.message
 
-  var editor_type;
+  let editor_type;
   try {
-    editor_type = JSON.parse(manager_response_msg?.content ?? "");
+    editor_type = JSON.parse(manager_response_msg?.content ?? "") as { tool: EditorType, text: string };
   }
   catch (e) {
     return undefined;
