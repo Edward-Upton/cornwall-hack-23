@@ -30,7 +30,7 @@ export interface EditEvent {
 export const Editors: {
   display: string;
   value: EditorType;
-  icon: LucideIcon | undefined;
+  icon: LucideIcon;
 }[] = [
   {
     display: "Manager",
