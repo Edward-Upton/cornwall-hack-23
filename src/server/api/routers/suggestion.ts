@@ -7,8 +7,7 @@ import { getStructure } from "~/server/editors/structure/prompt";
 import { getBrainstorm } from "~/server/editors/brainstorm/prompt";
 import { getCitation } from "~/server/editors/citation/prompt";
 import { getManager } from "~/server/editors/manager/prompt";
-import { ChatCompletion } from "openai/resources/chat/completions";
-import OpenAI from "openai";
+import type OpenAI from "openai";
 
 export const suggestionRouter = createTRPCRouter({
   submit: adminProcedure
