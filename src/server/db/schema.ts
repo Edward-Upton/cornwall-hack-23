@@ -106,3 +106,14 @@ export const queryHashes = mysqlTable(
     createdAtIdx: index("createdAt_idx").on(qh.createdAt),
   }),
 );
+
+export const files = mysqlTable("file", {
+  key: varchar("fileKey", { length: 255 }).notNull().primaryKey(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  url: varchar("url", { length: 255 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+});
+
+export const filesRelations = relations(files, ({ one }) => ({
+  user: one(users, { fields: [files.userId], references: [users.id] }),
+}));
