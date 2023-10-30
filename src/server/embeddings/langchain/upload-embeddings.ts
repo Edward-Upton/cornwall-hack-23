@@ -3,12 +3,14 @@ import {RedisVectorStore} from "langchain/vectorstores/redis";
 import {OpenAIEmbeddings} from "langchain/embeddings/openai";
 import {WebPDFLoader} from "langchain/document_loaders/web/pdf";
 import crypto from "crypto";
+import { env } from "~/env.mjs";
 
 export const uploadEmbeddings = async (fileUrl: string, fileId: string, userId: string) => {
   const client = createClient({
-    url: process.env.REDIS_URL,
+    url: env.REDIS_URL,
     // socket : {
-    //   tls: true
+    //   tls: true,
+    //   ss
     // }
   });
   await client.connect();

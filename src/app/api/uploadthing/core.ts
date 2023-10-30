@@ -2,6 +2,7 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
 import { files } from "~/server/db/schema";
+import { uploadEmbeddings } from "~/server/embeddings/langchain/upload-embeddings";
 
 const f = createUploadthing();
 
@@ -35,6 +36,7 @@ export const ourFileRouter = {
       });
 
       // CALL EMBEDDINGS HERE!!!
+      await uploadEmbeddings(file.url, file.key, metadata.userId);
     }),
 } satisfies FileRouter;
 
