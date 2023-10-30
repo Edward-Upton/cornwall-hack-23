@@ -22,6 +22,18 @@ const Input = () => {
   const [events, setEvents] = useState<EditEvent[]>([]);
   const [selected, setSelected] = useState<selected>({ start: 0, end: 0, value: "" });
 
+  const replaceText = (start: number, end: number, replacement: string) => {
+    if (start === 0 && end === 0) {
+      console.log("Replacing all text", start, end, replacement);
+      setInput(replacement);
+    } else {
+      console.log("Replacing text", start, end, replacement);
+      setInput((prev) => {
+        return prev.substring(0, start) + replacement + prev.substring(end);
+      });
+    }
+  }
+
   const eventsRef = useRef<EditEvent[]>();
   eventsRef.current = events;
 
@@ -34,6 +46,10 @@ const Input = () => {
     eventsRef.current = [...events, event];
     setEvents([...events, event]);
   }
+
+  useEffect(() => {
+    console.log("Selected change!", selected);
+  }, [selected]);
 
   // Update the pending event when the API request finishes.
   const updatePendingEvent = (newEvent: EditEvent) => {
@@ -64,6 +80,8 @@ const Input = () => {
       input: selected.value.length > 0 ? selected.value : input,
       output: data?.content ?? "",
       editType: editType,
+      start: selected.value.length > 0 ? selected.start : 0,
+      end: selected.value.length > 0 ? selected.end : 0,
     });
   }, [input, selected]);
 
@@ -75,6 +93,8 @@ const Input = () => {
       input: selected.value.length > 0 ? selected.value : input,
       output: "",
       editType: type,
+      start: selected.value.length > 0 ? selected.start : 0,
+      end: selected.value.length > 0 ? selected.end : 0,
     });
     const result = await submission.mutateAsync(
       {
@@ -143,7 +163,8 @@ const Input = () => {
             event={event}
             events={events}
             setEvents={setEvents}
-            setInput={setInput}
+            // setInput={setInput}
+            replacementCallback={replaceText}
           />
         ))}
       </div>

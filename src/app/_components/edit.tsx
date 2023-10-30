@@ -9,15 +9,18 @@ export function Edit({
   event,
   events,
   setEvents,
-  setInput,
+  // setInput,
+  replacementCallback,
+
 }: {
   event: EditEvent, 
   events: EditEvent[], 
   setEvents: (events: EditEvent[]) => void
-  setInput: (text: string) => void
+  // setInput: (text: string) => void
+  replacementCallback: (start: number, end: number, replacement: string) => void
 }) {
   const handleAccept = () => {
-    setInput(event.output);
+    replacementCallback(event.start ?? 0, event.end ?? 0, event.output);
     removeEvent();
   }
 
