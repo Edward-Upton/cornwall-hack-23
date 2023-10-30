@@ -4,6 +4,7 @@ import {
   Lightbulb,
   Minimize2,
   type LucideIcon,
+  Bot,
 } from "lucide-react";
 import { z } from "zod";
 
@@ -13,6 +14,7 @@ export const EditorTypes = z.enum([
   "structure",
   "brainstorm",
   "cite",
+  "manager",
 ]);
 export type EditorType = z.infer<typeof EditorTypes>;
 
@@ -28,8 +30,13 @@ export interface EditEvent {
 export const Editors: {
   display: string;
   value: EditorType;
-  icon: LucideIcon;
+  icon: LucideIcon | undefined;
 }[] = [
+  {
+    display: "Manager",
+    value: "manager",
+    icon: Bot,
+  },
   {
     display: "Brainstorm",
     value: "brainstorm",
