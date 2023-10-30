@@ -118,34 +118,93 @@ const Input = () => {
     mutationCallback(result, pendingID, type);
   };
 
+    //   <div className="mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-8xl">
+    //   <div className="md:flex">
+    //     <div className="md:shrink-0">
+    //       <div className="h-48 w-full object-cover md:h-full md:w-48 bg-slate-700"></div>
+    //     </div>
+    //     <div className="p-8">
+    //       <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Company retreats</div>
+    //       <a href="#" className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">Incredible accommodation for your team</a>
+    //       <p className="mt-2 text-slate-500">Looking to take your team away on a retreat to enjoy awesome food and take in some sunshine? We have a list of places to do just that.</p>
+    //     </div>
+    //   </div>
+    // </div>
+
   return (
-    <div className="grid h-full w-full grid-cols-16 gap-4">
-      {/* Input */}
-      <div className="col-span-11 flex h-full flex-col gap-3">
-        <>
-          <Textarea
-            defaultValue={metaInput}
-            onChange={(v) => setMetaInput(v.target.value)}
-            className="h-2 resize-none font-mono text-lg selection:bg-accent"
-            placeholder="What are you writing about?"
-          />
-          <Textarea
-            value={input}
-            onChange={(v) => setInput(v.target.value)}
-            className="h-full resize-none font-mono text-lg selection:bg-accent"
-            placeholder="Let your imagination go wild..."
-            onSelect={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-              const selectedText = e.target.value.substring(
-                e.target.selectionStart,
-                e.target.selectionEnd,
-              );
-              setSelected({
-                value: selectedText,
-                start: e.target.selectionStart,
-                end: e.target.selectionEnd,
-              });
-            }}
-          />
+
+
+
+    <div className="mx-auto rounded-xl shadow-md md:max-w-8xl">
+      <div className="md:flex">
+        <div className="">
+          <div className="h-24 w-full flex flex-row flex-wrap object-cover md:h-full md:w-32 bg-inherit">
+            {/* Editors */}
+            <div className="flex max-md:flex-row md:flex-col justify-center items-center gap-4 p-4">
+              {Editors.map((editor) => (
+                <div key={editor.value} className="text-center">
+                  <Button
+                    variant="ghost"
+                    className="h-16 w-16 hover:bg-accent/50"
+                    onClick={() => handleEditorClick(editor.value)}
+                  >
+                    <editor.icon size={"36"} />
+                  </Button>
+                  <p className="w-full text-sm opacity-0 transition-opacity group-hover:opacity-100">
+                    {editor.display}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="p-8 grow">
+
+          {/* Input */}
+          <div className="tracking-wide text-indigo-500 mb-4 font-semibold">
+            <p>type your title and a brief description to get started</p>
+          </div>
+          <div className="text-sm mt-4 h-full flex flex-col gap-3">
+            <Textarea
+              defaultValue={metaInput}
+              onChange={(v) => setMetaInput(v.target.value)}
+              className="h-2 w-full resize-none font-mono text-lg selection:bg-accent"
+              placeholder="What are you writing about?"
+            />
+            <Textarea
+              value={input}
+              onChange={(v) => setInput(v.target.value)}
+              className="w-full grow font-mono text-lg selection:bg-accent"
+              placeholder="Let your imagination go wild..."
+              onSelect={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                const selectedText = e.target.value.substring(
+                  e.target.selectionStart,
+                  e.target.selectionEnd,
+                );
+                setSelected({
+                  value: selectedText,
+                  start: e.target.selectionStart,
+                  end: e.target.selectionEnd,
+                });
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Edit events */}
+        <div className="p-8 space-y-2">
+          {events.map((event) => (
+            <Edit
+              key={event.id}
+              event={event}
+              events={events}
+              setEvents={setEvents}
+              replacementCallback={replaceText}
+            />
+          ))}
+        </div>
+      </div>
+
           <div>
             <UploadFile
               onSuccess={(res) => {
@@ -190,39 +249,8 @@ const Input = () => {
               ))}
             </div>
           </div>
-        </>
-      </div>
 
-      {/* Editors */}
-      <div className="group mt-4 flex h-full flex-col items-center gap-1">
-        {Editors.map((editor) => (
-          <div key={editor.value} className="text-center">
-            <Button
-              variant="ghost"
-              className="h-16 w-16 hover:bg-accent/50"
-              onClick={() => handleEditorClick(editor.value)}
-            >
-              <editor.icon size={"36"} />
-            </Button>
-            <p className="w-full text-sm opacity-0 transition-opacity group-hover:opacity-100">
-              {editor.display}
-            </p>
-          </div>
-        ))}
-      </div>
 
-      {/* Edit events */}
-      <div className="col-span-4 flex h-full flex-col gap-2">
-        {events.map((event) => (
-          <Edit
-            key={event.id}
-            event={event}
-            events={events}
-            setEvents={setEvents}
-            replacementCallback={replaceText}
-          />
-        ))}
-      </div>
     </div>
   );
 };
