@@ -20,7 +20,6 @@ export const getManager = async (input: string, metaInput: string) => {
   const manager_response_msg = manager_response.choices[0]?.message
 
   var editor_type;
-  console.log(manager_response_msg?.content)
   try {
     editor_type = JSON.parse(manager_response_msg?.content ?? "");
   }
@@ -28,7 +27,6 @@ export const getManager = async (input: string, metaInput: string) => {
     return undefined;
   }
   
-  console.log(editor_type?.tool)
-  const editor_response = strToCompletion(editor_type?.tool, editor_type?.text, metaInput)
+  const editor_response = await strToCompletion(editor_type?.tool, editor_type?.text, metaInput)
   return editor_response;
 };
