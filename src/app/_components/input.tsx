@@ -24,10 +24,8 @@ const Input = () => {
 
   const replaceText = (start: number, end: number, replacement: string) => {
     if (start === 0 && end === 0) {
-      console.log("Replacing all text", start, end, replacement);
       setInput(replacement);
     } else {
-      console.log("Replacing text", start, end, replacement);
       setInput((prev) => {
         return prev.substring(0, start) + replacement + prev.substring(end);
       });
@@ -38,6 +36,7 @@ const Input = () => {
   eventsRef.current = events;
 
   useEffect(() => {
+    setMetaInput("Intelligence, Humanity and AI: A Conversation")
     setInput("When we think about an entity's ability to dictate the arrangement of the atoms in our lightcone, we might be tempted to boil that capacity down to a single value like 'Intelligence' or 'IQ'. I don't think this is a helpful way of thinking about the problem.");
   }, []);
 
@@ -46,10 +45,6 @@ const Input = () => {
     eventsRef.current = [...events, event];
     setEvents([...events, event]);
   }
-
-  useEffect(() => {
-    console.log("Selected change!", selected);
-  }, [selected]);
 
   // Update the pending event when the API request finishes.
   const updatePendingEvent = (newEvent: EditEvent) => {
