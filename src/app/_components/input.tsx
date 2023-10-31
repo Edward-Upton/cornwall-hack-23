@@ -120,8 +120,6 @@ const Input = () => {
 
   return (
 
-
-
     <div className="mx-auto rounded-xl shadow-md md:max-w-8xl">
       <div className="md:flex">
         <div className="">
@@ -190,53 +188,50 @@ const Input = () => {
           ))}
         </div>
       </div>
-
-          <div>
-            <UploadFile
-              onSuccess={(res) => {
-                if (!res) return;
-                const file = res[0];
-                if (!file) return;
-                setFiles((files) => [
-                  ...files,
-                  {
-                    key: file.key,
-                    url: file.url,
-                    name: file.name,
-                  },
-                ]);
-              }}
-            />
-            <div className="flex gap-2">
-              {files.map((file) => (
-                <div
-                  key={file.key}
-                  className="w-32 space-y-1 text-ellipsis rounded-lg bg-accent p-2 text-center"
-                >
-                  <p className="overflow-hidden text-ellipsis">{file.name}</p>
-                  <Button
-                    size="sm"
-                    onClick={() =>
-                      deleteFileMutation.mutate(
-                        { key: file.key },
-                        {
-                          onSuccess: () => {
-                            setFiles((files) =>
-                              files.filter((f) => f.key !== file.key),
-                            );
-                          },
-                        },
-                      )
-                    }
-                  >
-                    Delete
-                  </Button>
-                </div>
-              ))}
+      <div>
+        <UploadFile
+          onSuccess={(res) => {
+            if (!res) return;
+            const file = res[0];
+            if (!file) return;
+            setFiles((files) => [
+              ...files,
+              {
+                key: file.key,
+                url: file.url,
+                name: file.name,
+              },
+            ]);
+          }}
+        />
+        <div className="flex gap-2">
+          {files.map((file) => (
+            <div
+              key={file.key}
+              className="w-32 space-y-1 text-ellipsis rounded-lg bg-accent p-2 text-center"
+            >
+              <p className="overflow-hidden text-ellipsis">{file.name}</p>
+              <Button
+                size="sm"
+                onClick={() =>
+                  deleteFileMutation.mutate(
+                    { key: file.key },
+                    {
+                      onSuccess: () => {
+                        setFiles((files) =>
+                          files.filter((f) => f.key !== file.key),
+                        );
+                      },
+                    },
+                  )
+                }
+              >
+                Delete
+              </Button>
             </div>
-          </div>
-
-
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
