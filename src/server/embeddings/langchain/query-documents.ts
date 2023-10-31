@@ -1,8 +1,8 @@
-import {createClient} from "redis";
-import {RedisVectorStore} from "langchain/vectorstores/redis";
-import {OpenAIEmbeddings} from "langchain/embeddings/openai";
-import {Document} from "~/server/embeddings/document";
-import {type Document as LangchainDocument} from "langchain/dist/document";
+import { createClient } from "redis";
+import { RedisVectorStore } from "langchain/vectorstores/redis";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { type Document } from "~/server/embeddings/document";
+import { type Document as LangchainDocument } from "langchain/dist/document";
 
 export const queryDocuments = async (
   input: string,
@@ -12,10 +12,8 @@ export const queryDocuments = async (
 ) => {
   const client = createClient({
     url: process.env.REDIS_URL,
-    // socket : {
-    //   tls: true
-    // }
   });
+
   await client.connect();
   const vectorStore = new RedisVectorStore(new OpenAIEmbeddings(), {
     redisClient: client,

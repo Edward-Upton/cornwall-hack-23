@@ -10,7 +10,7 @@ import { getManager } from "~/server/editors/manager/prompt";
 import { getCritique } from "~/server/editors/critic/prompt";
 
 import { ChatCompletion } from "openai/resources/chat/completions";
-import OpenAI from "openai";
+import type OpenAI from "openai";
 
 export const suggestionRouter = createTRPCRouter({
   submit: adminProcedure
