@@ -5,6 +5,7 @@ import {
   Minimize2,
   type LucideIcon,
   Bot,
+  ScanEye,
 } from "lucide-react";
 import { z } from "zod";
 
@@ -15,6 +16,7 @@ export const EditorTypes = z.enum([
   "brainstorm",
   "cite",
   "manager",
+  "critic",
 ]);
 export type EditorType = z.infer<typeof EditorTypes>;
 
@@ -57,4 +59,9 @@ export const Editors: {
     value: "summarise",
     icon: Minimize2,
   },
+  {
+    display: "Critique",
+    value: "critic",
+    icon: ScanEye,
+  }
 ];
