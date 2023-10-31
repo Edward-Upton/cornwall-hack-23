@@ -2,7 +2,7 @@
 import { query } from "~/server/openai-wrapper";
 import { construct_editor_messages } from "~/server/editors/utils";
 import { strToCompletion } from "~/server/api/routers/suggestion";
-import { EditorType } from "~/lib/editors-types";
+import { type EditorType } from "~/lib/editors-types";
 
 export const getManager = async (input: string, metaInput: string) => {
   
