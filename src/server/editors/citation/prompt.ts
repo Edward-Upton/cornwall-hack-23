@@ -1,9 +1,9 @@
 // This code is for v4 of the openai package: npmjs.com/package/openai
 import { queryDocuments } from "~/server/embeddings/langchain/query-documents";
-import { Document } from "~/server/embeddings/document";
+import { type Document } from "~/server/embeddings/document";
 import { query } from "~/server/openai-wrapper";
 
-export const getCitation = async (input: string, userId: string) => {
+export const getCitation = async (input: string, openAIKey: string, userId: string) => {
   const relDocs: Document[] = await queryDocuments(input, userId);
 
   const contextParts: Array<string> = [];
@@ -45,7 +45,7 @@ export const getCitation = async (input: string, userId: string) => {
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
-  });
+  }, openAIKey);
 
   const jsonData = JSON.parse(response.choices[0]?.message?.content ?? "") as { author: string, year: number, page_number: number, extract: string }
 

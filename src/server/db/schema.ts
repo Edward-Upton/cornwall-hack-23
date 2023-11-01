@@ -30,6 +30,7 @@ export const users = mysqlTable("user", {
   }).default(sql`CURRENT_TIMESTAMP(3)`),
   image: varchar("image", { length: 255 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user"),
+  openAIKey: varchar("openAIKey", { length: 255 }),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
