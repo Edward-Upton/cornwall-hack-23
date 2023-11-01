@@ -6,6 +6,7 @@ import {
   type LucideIcon,
   Bot,
   ScanEye,
+  BookOpenText,
 } from "lucide-react";
 import { z } from "zod";
 
@@ -63,5 +64,10 @@ export const Editors: {
     display: "Critique",
     value: "critic",
     icon: ScanEye,
-  }
+  },
+  {
+    display: "Cite",
+    value: "cite",
+    icon: BookOpenText,
+  },
 ];

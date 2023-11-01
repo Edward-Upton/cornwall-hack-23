@@ -86,11 +86,11 @@ const Input = () => {
     setEvents([...allEvents]);
   };
 
-  const mutationCallback = React.useCallback((data: ChatCompletionMessage | undefined, pendingID: string, editType: EditorType) => {
+  const mutationCallback = React.useCallback((data: string | null | undefined, pendingID: string, editType: EditorType) => {
     updatePendingEvent({
       id: pendingID,
       input: selected.value.length > 0 ? selected.value : input,
-      output: data?.content ?? "",
+      output: data ?? "",
       editType: editType,
       start: selected.value.length > 0 ? selected.start : 0,
       end: selected.value.length > 0 ? selected.end : 0,

@@ -1,18 +1,43 @@
 // This code is for v4 of the openai package: npmjs.com/package/openai
+import { queryDocuments } from "~/server/embeddings/langchain/query-documents";
+import { Document } from "~/server/embeddings/document";
 import { query } from "~/server/openai-wrapper";
 
-export const getCitation = async (input: string) => {
+export const getCitation = async (input: string, userId: string) => {
+  const relDocs: Document[] = await queryDocuments(input, userId);
+
+  const contextParts: Array<string> = [];
+  relDocs.forEach((doc) => {
+    const metadata = JSON.stringify(doc.metadata);
+    let content = doc.pageContent;
+    content = content.replace("<PAD>", "").replace("<EOS>", "")  // Bit hacky but it works
+    contextParts.push(`{"metadata": ${metadata}, "content", "${content}"}`);
+  })
+
+  const prompt = `${input}`;
+
   const response = await query({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4",
     messages: [
       {
-        role: "system",
-        content:
-          "You will be given a block of text about a subject. You'll also be given some contextual information that is something to do with the text, as well as where that contextual information came from. I'd like you to modify the text to cite the information.\n",
+        "role": "system",
+        "content": `You are an expert writer. You will be given some text from a user, and you must help the user with their essay by providing some
+        additional context. You will first be shown the text from the user, and several relevant papers. You will later be asked to return the most
+        relevant extract from all of the papers.`
       },
       {
-        role: "user",
-        content: input,
+        "role": "user",
+        "content": prompt
+      },
+      {
+        "role": "system",
+        "content": `The contextual information is as follows:\n${contextParts.join("\n,")}`
+      },
+      {
+        "role": "system",
+        "content": `Produce the most relevant section of text that is most similar to the users input. Produce your output in JSON format,
+        including the author(s) of the paper (in format et al. if there is more than one), the page number, and the year of publication.
+        If citing, produce word for word quotes. I need the response in the JSON fomat: {"author": "Smith et al.", "year": 2021, "page_number": 1, "extract": "This is the extract."}`
       },
     ],
     temperature: 1,
@@ -22,5 +47,15 @@ export const getCitation = async (input: string) => {
     presence_penalty: 0,
   });
 
-  return response;
-};
+  const jsonData = JSON.parse(response.choices[0]?.message?.content ?? "") as { author: string, year: number, page_number: number, extract: string }
+
+  const citation = {
+    authors: jsonData.author,
+    year: jsonData.year,
+    page: jsonData.page_number,
+    extract: jsonData.extract,
+  }
+
+  // Format the citation with: content [author, year, page]
+  return `${citation.extract} [${citation.authors}, ${citation.year}, p.${citation.page}]`
+}
