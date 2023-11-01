@@ -1,12 +1,9 @@
 "use client";
 
-import { Button } from "~/components/ui/button";
-import { Textarea } from "~/components/ui/textarea";
-
 export default function Components() {
   return (
-    <div className="grid grid-flow-row-dense grid-cols-5 gap-2">
-      <div className="col-span-2 p-4 bg-slate-900 text-primary rounded-md space-y-12">
+    <div className="grid grid-flow-row-dense grid-cols-5 gap-6">
+      <div className="col-span-2 p-4 bg-accent text-primary selection:bg-accent rounded-md space-y-12">
         <p className="text-lg">
           📜 Welcome to Rubberduck
         </p>
@@ -40,17 +37,17 @@ export default function Components() {
         </p>
 
       </div>
-      <div className="col-span-3 p-4 bg-slate-900 text-primary rounded-md space-y-12">
+      <div className="col-span-3 p-4 bg-accent text-primary rounded-md space-y-12 selection:bg-accent">
         <p className="text-lg"><u>Example: Brainstorm</u></p>
         <div className="space-y-6">
           <p className="text-lg">The user inputs the following into the text box to get started:</p>
-          <div className="bg-slate-700 p-4 rounded-md selection:bg-accent">
+          <div className="bg-primary/20 p-4 rounded-md selection:bg-accent">
               <p>What is the relationship between AI and democracy? In the short term, AI provides opportunities and can empower people and organisations, but over long term will erode autonomy. In 21st century, we are already seeing some effects.</p>
           </div>
         </div>
         <div className="space-y-6">
           <p className="text-lg">They click on the <b>Structure</b> Editor, and it comes back with the following:</p>
-          <div className="bg-slate-700 p-4 rounded-md selection:bg-accent">
+          <div className="bg-primary/10 p-4 rounded-md selection:bg-accent">
               # The Intricacies of AI and Democracy<br /><br />
 
               ## Short-Term Opportunities and Empowerment
