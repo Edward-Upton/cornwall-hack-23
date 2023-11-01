@@ -1,14 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { type EditEvent, Editors, type EditorType } from "~/lib/editors-types";
+import type { EditEvent, EditorType } from "~/lib/editors-types";
 import { api } from "~/trpc/react";
+
 import { Edit } from "./edit";
-import React from "react";
-import { type ChatCompletionMessage } from "openai/resources";
 import UploadFile from "./upload-file";
+import EditorList from "./editors";
 
 interface selected {
   start: number;
@@ -21,7 +28,11 @@ const Input = () => {
   const [input, setInput] = useState("");
   const [metaInput, setMetaInput] = useState("");
   const [events, setEvents] = useState<EditEvent[]>([]);
-  const [selected, setSelected] = useState<selected>({ start: 0, end: 0, value: "" });
+  const [selected, setSelected] = useState<selected>({
+    start: 0,
+    end: 0,
+    value: "",
+  });
   const [files, setFiles] = useState<
     { key: string; url: string; name: string }[]
   >([]);
@@ -47,14 +58,16 @@ const Input = () => {
         return prev.substring(0, start) + replacement + prev.substring(end);
       });
     }
-  }
+  };
 
   const eventsRef = useRef<EditEvent[]>();
   eventsRef.current = events;
 
   useEffect(() => {
-    setMetaInput("Intelligence, Humanity and AI: A Conversation")
-    setInput("When we think about an entity's ability to dictate the arrangement of the atoms in our lightcone, we might be tempted to boil that capacity down to a single value like 'Intelligence' or 'IQ'. I don't think this is a helpful way of thinking about the problem.");
+    setMetaInput("Intelligence, Humanity and AI: A Conversation");
+    setInput(
+      "When we think about an entity's ability to dictate the arrangement of the atoms in our lightcone, we might be tempted to boil that capacity down to a single value like 'Intelligence' or 'IQ'. I don't think this is a helpful way of thinking about the problem.",
+    );
   }, []);
 
   // Add an event to the display of EditEvents, prior to the API request finishing.
@@ -86,16 +99,23 @@ const Input = () => {
     setEvents([...allEvents]);
   };
 
-  const mutationCallback = React.useCallback((data: string | null | undefined, pendingID: string, editType: EditorType) => {
-    updatePendingEvent({
-      id: pendingID,
-      input: selected.value.length > 0 ? selected.value : input,
-      output: data ?? "",
-      editType: editType,
-      start: selected.value.length > 0 ? selected.start : 0,
-      end: selected.value.length > 0 ? selected.end : 0,
-    });
-  }, [input, selected]);
+  const mutationCallback = useCallback(
+    (
+      data: string | null | undefined,
+      pendingID: string,
+      editType: EditorType,
+    ) => {
+      updatePendingEvent({
+        id: pendingID,
+        input: selected.value.length > 0 ? selected.value : input,
+        output: data ?? "",
+        editType: editType,
+        start: selected.value.length > 0 ? selected.start : 0,
+        end: selected.value.length > 0 ? selected.end : 0,
+      });
+    },
+    [input, selected],
+  );
 
   const handleEditorClick = async (type: EditorType) => {
     const pendingID = crypto.randomUUID();
@@ -108,74 +128,99 @@ const Input = () => {
       start: selected.value.length > 0 ? selected.start : 0,
       end: selected.value.length > 0 ? selected.end : 0,
     });
-    const result = await submission.mutateAsync(
-      {
-        text: selected.value.length > 0 ? selected.value : input,
-        editorType: type,
-        metaText: metaInput,
-      }
-    );
+    const result = await submission.mutateAsync({
+      text: selected.value.length > 0 ? selected.value : input,
+      editorType: type,
+      metaText: metaInput,
+    });
     mutationCallback(result, pendingID, type);
   };
 
   return (
-    <div className="mx-auto rounded-xl shadow-md md:max-w-8xl">
-      <div className="md:flex">
-        <div className="">
-          <div className="h-24 w-full space-y-4 flex flex-row flex-wrap object-cover md:h-full md:w-32 bg-inherit">
-            {/* Editors */}
-            <div className="flex max-md:flex-row md:flex-col justify-center items-center gap-4 py-4">
-              {Editors.map((editor) => (
-                <div key={editor.value} className="group text-center opacity-80">
-                  <Button
-                    variant="ghost"
-                    className="h-16 w-16 hover:bg-accent/50"
-                    onClick={() => handleEditorClick(editor.value)}
-                  >
-                    <editor.icon size={"36"} />
-                  </Button>
-                  <p className="w-full text-sm opacity-20 transition-opacity group-hover:opacity-100">
-                    {editor.display}
+    <div className="md:max-w-8xl mx-auto flex h-full flex-col overflow-y-auto">
+      <div className="w-full gap-4 md:flex">
+        {/* Editors */}
+        <EditorList handleEditorClick={handleEditorClick} />
+        {/* Input section */}
+        <div className="flex grow flex-col gap-4">
+          <div className="font-semibold tracking-wide text-indigo-500">
+            <p>type your title and a brief description to get started</p>
+          </div>
+          {/* Context */}
+          <Textarea
+            defaultValue={metaInput}
+            onChange={(v) => setMetaInput(v.target.value)}
+            className="h-2 w-full resize-none font-mono text-lg selection:bg-accent"
+            placeholder="What are you writing about?"
+          />
+          {/* Main input */}
+          <Textarea
+            value={input}
+            onChange={(v) => setInput(v.target.value)}
+            className="min-h-[16rem] w-full grow font-mono selection:bg-accent"
+            placeholder="Let your imagination go wild..."
+            onSelect={(e: ChangeEvent<HTMLTextAreaElement>) => {
+              const selectedText = e.target.value.substring(
+                e.target.selectionStart,
+                e.target.selectionEnd,
+              );
+              setSelected({
+                value: selectedText,
+                start: e.target.selectionStart,
+                end: e.target.selectionEnd,
+              });
+            }}
+          />
+          <div>
+            <UploadFile
+              onSuccess={(res) => {
+                if (!res) return;
+                const file = res[0];
+                if (!file) return;
+                setFiles((files) => [
+                  ...files,
+                  {
+                    key: file.key,
+                    url: file.url,
+                    name: file.name,
+                  },
+                ]);
+              }}
+            />
+            <div className="flex w-full gap-2 overflow-x-auto">
+              {files.map((file) => (
+                <div
+                  key={file.key}
+                  className="h-26 flex w-32 flex-col items-center justify-between space-y-1 text-ellipsis rounded-lg bg-accent p-2 text-center"
+                >
+                  <p className="w-full overflow-hidden text-ellipsis">
+                    {file.name}
                   </p>
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      deleteFileMutation.mutate(
+                        { key: file.key },
+                        {
+                          onSuccess: () => {
+                            setFiles((files) =>
+                              files.filter((f) => f.key !== file.key),
+                            );
+                          },
+                        },
+                      )
+                    }
+                  >
+                    Delete
+                  </Button>
                 </div>
               ))}
             </div>
           </div>
         </div>
-        <div className="md:p-4 grow">
-          {/* Input */}
-          <div className="tracking-wide text-indigo-500 mb-4 font-semibold">
-            <p>type your title and a brief description to get started</p>
-          </div>
-          <div className="text-sm mt-4 h-full flex flex-col gap-3">
-            <Textarea
-              defaultValue={metaInput}
-              onChange={(v) => setMetaInput(v.target.value)}
-              className="h-2 w-full resize-none font-mono text-lg selection:bg-accent"
-              placeholder="What are you writing about?"
-            />
-            <Textarea
-              value={input}
-              onChange={(v) => setInput(v.target.value)}
-              className="w-full grow font-mono selection:bg-accent"
-              placeholder="Let your imagination go wild..."
-              onSelect={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                const selectedText = e.target.value.substring(
-                  e.target.selectionStart,
-                  e.target.selectionEnd,
-                );
-                setSelected({
-                  value: selectedText,
-                  start: e.target.selectionStart,
-                  end: e.target.selectionEnd,
-                });
-              }}
-            />
-          </div>
-        </div>
 
         {/* Edit events */}
-        <div className="py-4 space-y-2">
+        <div className="space-y-2 py-4">
           {events.map((event) => (
             <Edit
               key={event.id}
@@ -184,50 +229,6 @@ const Input = () => {
               setEvents={setEvents}
               replacementCallback={replaceText}
             />
-          ))}
-        </div>
-      </div>
-      <div>
-        <UploadFile
-          onSuccess={(res) => {
-            if (!res) return;
-            const file = res[0];
-            if (!file) return;
-            setFiles((files) => [
-              ...files,
-              {
-                key: file.key,
-                url: file.url,
-                name: file.name,
-              },
-            ]);
-          }}
-        />
-        <div className="flex gap-2">
-          {files.map((file) => (
-            <div
-              key={file.key}
-              className="w-32 h-32 space-y-1 text-ellipsis rounded-lg bg-accent p-2 text-center flex flex-col justify-between items-center"
-            >
-              <p className="overflow-hidden text-ellipsis">{file.name}</p>
-              <Button
-                size="sm"
-                onClick={() =>
-                  deleteFileMutation.mutate(
-                    { key: file.key },
-                    {
-                      onSuccess: () => {
-                        setFiles((files) =>
-                          files.filter((f) => f.key !== file.key),
-                        );
-                      },
-                    },
-                  )
-                }
-              >
-                Delete
-              </Button>
-            </div>
           ))}
         </div>
       </div>
