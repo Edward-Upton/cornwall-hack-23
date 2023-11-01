@@ -23,6 +23,8 @@ export default function Nav() {
   const debouncedOpenAIKey = useDebounce(openAIKey, 500);
 
   useEffect(() => {
+    if (!debouncedOpenAIKey) return;
+
     addOpenAIKey.mutate({ key: debouncedOpenAIKey });
   }, [debouncedOpenAIKey]);
 
@@ -39,9 +41,6 @@ export default function Nav() {
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
             <ActiveLink href="/" display="home" />
-          </Button>
-          <Button variant="link" size="sm" asChild>
-            <ActiveLink href="/components" display="components" />
           </Button>
           <Button variant="link" size="sm" asChild>
             <ActiveLink href="/documentation" display="documentation" />

@@ -4,8 +4,9 @@ import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import Nav from "./_components/nav";
+import Nav from "~/components/nav";
 import { ThemeProvider } from "~/components/theme-provider";
+import { Toaster } from "~/components/ui/toaster";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`relative flex h-screen flex-col bg-background font-mono text-foreground ${inter.variable}`}
+        className={`flex h-screen flex-col bg-background font-mono text-foreground ${inter.variable}`}
       >
         <TRPCReactProvider headers={headers()}>
           <ThemeProvider
@@ -36,9 +37,12 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Nav />
-            <div className="flex-1 p-6 md:p-16 lg:p-32">{children}</div>
+            <div className="flex-grow flex-shrink overflow-hidden p-4 md:px-16 md:py-6 lg:px-32">
+              {children}
+            </div>
+            <Toaster />
           </ThemeProvider>
-        </TRPCReactProvider>{" "}
+        </TRPCReactProvider>
       </body>
     </html>
   );
