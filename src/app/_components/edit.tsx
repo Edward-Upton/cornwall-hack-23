@@ -43,10 +43,10 @@ export function Edit({
       </div>
       <div className="">
         {(() => {
-        if(event.output?.length > 0) {
+        if(event.output != undefined && event.output != "") {
           return <Textarea className="bg-foreground/50 text-accent" defaultValue={event.output}></Textarea>
         } else if (event.output == undefined) {
-          return <Textarea className="bg-foreground/50 text-accent" defaultValue="SERVER ERROR"></Textarea>
+          handleReject()
         } else {
           return (
             <div className="bg-primary flex rounded-md justify-center items-center h-16">

@@ -24,7 +24,7 @@ export type EditorType = z.infer<typeof EditorTypes>;
 export interface EditEvent {
   id: string;
   input: string;
-  output: string;
+  output: string | undefined | null;
   editType: EditorType;
   start?: number;
   end?: number;

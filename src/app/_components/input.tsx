@@ -90,7 +90,7 @@ const Input = () => {
     updatePendingEvent({
       id: pendingID,
       input: selected.value.length > 0 ? selected.value : input,
-      output: data ?? "",
+      output: data,
       editType: editType,
       start: selected.value.length > 0 ? selected.start : 0,
       end: selected.value.length > 0 ? selected.end : 0,
