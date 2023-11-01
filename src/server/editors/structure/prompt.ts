@@ -2,11 +2,12 @@
 import { query } from "~/server/openai-wrapper";
 import { construct_editor_messages } from "~/server/editors/utils";
 
-export const getStructure = async (input: string, metaInput: string) => {
-  
+
+
+export const getStructure = async (input: string, metaInput: string, openAIKey: string) => {
   const editorTaskMsg = `You are an expert in creative writing. You will interact with a user who is currently writing their work.\n\nYou will be shown some text by the user. This text will be a summary of the points the user wants to cover in their writing, You will convert this summary into a markdown structure of their writing. Use subtitles to indicate different sections. Under each subtitle, write several bullet points, for each discussing the key points. If you believe that the user could benefit from including further content that wasn't in their summary, feel free to include these points.\n\nIf the users writing is not a summary with enough content to produce a structure of their writing, politely respond and very briefly state that you require more writing to generate a structure.\n\nBelow is an example input:\n\"Somewhere in the training data for a large language model, there exists the result of a hash function, like SHA256, followed by the string of characters that were hashed to produce that result. In order to achieve zero loss language models must crack SHA256. Can language models do this? What would that require? High-level overview - language models are trained on a large amount of complex non-human data.\"\n\nBelow is an example of desired behaviour:\n\n# Can GPT-N crack SHA256?\n- Introduce quote by Elizier Yudkowsky, that in order for LMs to get perfect loss they must crack SHA256 to predict key from hash\n- Briefly discuss how LMs could crack this through next-word prediction\n\n## Language Models and Hash Functions\n- Brief explanation on what a language model is, and what a hash function is\n- Explain how language models could learn SHA256 in theory as they will have seen it during training\n\n## Maintaining a lookup table\n- Explain how language models could memorise a lookup table to crack SHA256\n- Discuss how this is computationally infeasible\n\n## Thoughts on the Thought Experiment\n- High-level overview on SHA256 problem. The quote is trying to indicate that language models are trained on non-human complex data that don't \"just\" require simulating human consciousness\n- Instead, language models have to build world model and understand non-human data like hash functions or weather patterns\n- Discuss the implications of this`
   const messages = construct_editor_messages(input, metaInput, editorTaskMsg);
-  
+
   const response = await query({
     model: "gpt-3.5-turbo",
     messages: messages,
@@ -15,7 +16,7 @@ export const getStructure = async (input: string, metaInput: string) => {
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
-  });
+  }, openAIKey);
 
   return response;
 };
