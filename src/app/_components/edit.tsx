@@ -20,7 +20,7 @@ export function Edit({
   replacementCallback: (start: number, end: number, replacement: string) => void
 }) {
   const handleAccept = () => {
-    replacementCallback(event.start ?? 0, event.end ?? 0, event.output);
+    replacementCallback(event.start ?? 0, event.end ?? 0, event.output ?? "");
     removeEvent();
   }
 
