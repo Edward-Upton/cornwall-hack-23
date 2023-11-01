@@ -29,6 +29,9 @@ export default async function Nav() {
           <Button variant="link" size="sm" asChild>
             <ActiveLink href="/components" display="components" />
           </Button>
+          <Button variant="link" size="sm" asChild>
+            <ActiveLink href="/documentation" display="documentation" />
+          </Button>
         </div>
       </div>
       {/* Theme + Login */}

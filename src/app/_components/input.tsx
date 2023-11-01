@@ -119,7 +119,6 @@ const Input = () => {
   };
 
   return (
-
     <div className="mx-auto rounded-xl shadow-md md:max-w-8xl">
       <div className="md:flex">
         <div className="">
