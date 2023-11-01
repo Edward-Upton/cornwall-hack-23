@@ -42,14 +42,19 @@ export function Edit({
         <p className="text-primary-foreground">{editorName}</p>
       </div>
       <div className="">
-        {event.output?.length > 0 ? (
-          <Textarea className="bg-foreground/50 text-accent" defaultValue={event.output}></Textarea>
-          ): ( 
+        {(() => {
+        if(event.output?.length > 0) {
+          return <Textarea className="bg-foreground/50 text-accent" defaultValue={event.output}></Textarea>
+        } else if (event.output == undefined) {
+          return <Textarea className="bg-foreground/50 text-accent" defaultValue="SERVER ERROR"></Textarea>
+        } else {
+          return (
             <div className="bg-primary flex rounded-md justify-center items-center h-16">
               <LoaderIcon className="w-6 h-6 animate-spin text-accent"/>
             </div>
           )
-          }
+        }
+        })()}
       </div>
       <div className="flex justify-end gap-2 space-2">
         <Button className="bg-green-500 hover:bg-green-600" disabled={event.output == ""} onClick={handleAccept}>
