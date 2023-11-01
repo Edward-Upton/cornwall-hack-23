@@ -20,7 +20,7 @@ export function Edit({
   replacementCallback: (start: number, end: number, replacement: string) => void
 }) {
   const handleAccept = () => {
-    replacementCallback(event.start ?? 0, event.end ?? 0, event.output);
+    replacementCallback(event.start ?? 0, event.end ?? 0, event.output ?? "");
     removeEvent();
   }
 
@@ -42,14 +42,19 @@ export function Edit({
         <p className="text-primary-foreground">{editorName}</p>
       </div>
       <div className="">
-        {event.output?.length > 0 ? (
-          <Textarea className="bg-foreground/50 text-accent" defaultValue={event.output}></Textarea>
-          ): ( 
+        {(() => {
+        if(event.output != undefined && event.output != "") {
+          return <Textarea className="bg-foreground/50 text-accent" defaultValue={event.output}></Textarea>
+        } else if (event.output == undefined) {
+          handleReject()
+        } else {
+          return (
             <div className="bg-primary flex rounded-md justify-center items-center h-16">
               <LoaderIcon className="w-6 h-6 animate-spin text-accent"/>
             </div>
           )
-          }
+        }
+        })()}
       </div>
       <div className="flex justify-end gap-2 space-2">
         <Button className="bg-green-500 hover:bg-green-600" disabled={event.output == ""} onClick={handleAccept}>

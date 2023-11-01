@@ -90,7 +90,7 @@ const Input = () => {
     updatePendingEvent({
       id: pendingID,
       input: selected.value.length > 0 ? selected.value : input,
-      output: data ?? "",
+      output: data,
       editType: editType,
       start: selected.value.length > 0 ? selected.start : 0,
       end: selected.value.length > 0 ? selected.end : 0,
@@ -99,6 +99,12 @@ const Input = () => {
 
   const handleEditorClick = async (type: EditorType) => {
     const pendingID = crypto.randomUUID();
+
+    // Do nothing if user hasn't written anything
+    if (input.length == 0) {
+      return undefined;
+    }
+    
     // Add a pending event.
     addPendingEvent({
       id: pendingID,
