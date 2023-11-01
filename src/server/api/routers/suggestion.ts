@@ -8,7 +8,8 @@ import { getBrainstorm } from "~/server/editors/brainstorm/prompt";
 import { getCitation } from "~/server/editors/citation/prompt";
 import { getManager } from "~/server/editors/manager/prompt";
 import { getCritique } from "~/server/editors/critic/prompt";
-
+import { ChatCompletion } from "openai/resources/chat/completions";
+import type OpenAI from "openai";
 import { eq } from "drizzle-orm";
 import { users } from "~/server/db/schema";
 

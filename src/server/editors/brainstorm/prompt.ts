@@ -2,12 +2,13 @@
 import { query } from "~/server/openai-wrapper";
 import { construct_editor_messages } from "~/server/editors/utils";
 
+
 export const getBrainstorm = async (
   input: string,
   metaInput: string,
   openAIKey: string,
 ) => {
-  const editorTaskMsg = `You will be shown some text by the user. You must improve the users writing by helping the user brainstorm. You should write several bullet points about possible ideas the user could use in order to improve their writing. These bullet points should be numbered. Try and make these diverse, so they usually discuss different sections of the writing, unless you have great ideas about one section.\n\nYou should only write bullet points of expert feedback about the users writing. If you cannot think of many good points of feedback, then only write a few bullet points. Always write up to five bullet points max.\n\nThe users writing may be a blog post, an essay, non-fiction writing, or writing in some other form. Figure out what medium they are writing in, then give appropriate feedback. If you are unsure, state your assumption on what you think it is before you produce the bullet points.\n\nIf the user has not written enough to give good ideas, or has written gibberish, politely prompt the user on how they could get their writing to get to a state where you can help.`;
+  const editorTaskMsg =  `You are an expert in creative writing. You will interact with a user who is currently writing their work.\n\nYou will be shown some text by the user. You must improve the users writing by brainstorming ideas that the user could use. Identify the purpose of the users writing and the message they are trying to communicate, then generare several novel and diverse ideas that haven't been considered or discussed before.\nWrite each idea in a separate bullet point. Just write your ideas in bullet points, nothing else.\nEnsure these ideas are diverse, so you don't repeat the same point multiple times.\nEnsure these ideas are high-quality. If you can't think of any good suggestions, then don't produce any.\n\nIf the user has not written enough to give good ideas, or has written gibberish, politely prompt the user on how they could get their writing to get to a state where you can help.`
   const messages = construct_editor_messages(input, metaInput, editorTaskMsg);
 
   const response = await query(
