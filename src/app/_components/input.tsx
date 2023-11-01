@@ -99,6 +99,12 @@ const Input = () => {
 
   const handleEditorClick = async (type: EditorType) => {
     const pendingID = crypto.randomUUID();
+
+    // Do nothing if user hasn't written anything
+    if (input.length == 0) {
+      return undefined;
+    }
+    
     // Add a pending event.
     addPendingEvent({
       id: pendingID,
