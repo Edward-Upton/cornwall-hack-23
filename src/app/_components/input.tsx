@@ -127,7 +127,7 @@ const Input = () => {
             {/* Editors */}
             <div className="flex max-md:flex-row md:flex-col justify-center items-center gap-4 py-4">
               {Editors.map((editor) => (
-                <div key={editor.value} className="text-center">
+                <div key={editor.value} className="group text-center opacity-80">
                   <Button
                     variant="ghost"
                     className="h-16 w-16 hover:bg-accent/50"
@@ -135,7 +135,7 @@ const Input = () => {
                   >
                     <editor.icon size={"36"} />
                   </Button>
-                  <p className="w-full text-sm opacity-0 transition-opacity group-hover:opacity-100">
+                  <p className="w-full text-sm opacity-20 transition-opacity group-hover:opacity-100">
                     {editor.display}
                   </p>
                 </div>
