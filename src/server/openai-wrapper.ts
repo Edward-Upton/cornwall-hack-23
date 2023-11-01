@@ -5,16 +5,17 @@ import { db } from "./db";
 import { eq } from "drizzle-orm";
 import { queryHashes } from "./db/schema";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export const query = async (
   body: OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming,
+  openAIKey: string,
   options?:
     | OpenAI.RequestOptions<Record<string, unknown> | Readable>
     | undefined,
 ) => {
+  const openai = new OpenAI({
+    apiKey: openAIKey,
+  });
+
   const hash = createHash("md5");
 
   const queryHash = hash
