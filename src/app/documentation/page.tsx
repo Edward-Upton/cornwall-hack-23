@@ -2,8 +2,8 @@
 
 export default function Components() {
   return (
-    <div className="grid grid-flow-row-dense grid-cols-5 gap-6">
-      <div className="col-span-2 p-4 bg-accent text-primary selection:bg-accent rounded-md space-y-12">
+    <div className="grid grid-flow-row-dense grid-cols-5 gap-2 overflow-y-auto">
+      <div className="col-span-2 p-4 bg-slate-900 text-primary rounded-md space-y-12">
         <p className="text-lg">
           📜 Welcome to Rubberduck
         </p>
@@ -13,7 +13,7 @@ export default function Components() {
 
         <p>Its open source, so please contribute on <a href="https://github.com/Edward-Upton/cornwall-hack-23" className="text-blue-500">GitHub</a>.
         </p>
-        <p>Usage: 
+        <p>Usage:
           <ul>
             <li>- Make sure your OpenAI key is set in settings.</li>
             <li>- Write some text in the box.</li>
@@ -57,8 +57,8 @@ export default function Components() {
               <br /><br />
 
               ## Erosion of Autonomy: A Long-term Concern
-              - Gradual erosion of autonomy with the surge of AI tools being used 
-              - Explain how AI applications that are designed to be convenient inadvertently track users Internet presence 
+              - Gradual erosion of autonomy with the surge of AI tools being used
+              - Explain how AI applications that are designed to be convenient inadvertently track users Internet presence
               - Discuss how AI assistants and smart cities build a digital profile of individuals by collecting their data
               <br /><br />
 
@@ -90,6 +90,6 @@ export default function Components() {
         </div>
       </div>
     </div>
-  
+
   );
 }
