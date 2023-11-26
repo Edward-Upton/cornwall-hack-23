@@ -31,6 +31,7 @@ export const users = mysqlTable("user", {
   image: varchar("image", { length: 255 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user"),
   openAIKey: varchar("openAIKey", { length: 255 }),
+  openAIModel: mysqlEnum("openAIModel", ["gpt-4", "gpt-3.5-turbo"]).default("gpt-4"),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

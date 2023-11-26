@@ -33,6 +33,8 @@ export const suggestionRouter = createTRPCRouter({
         where: eq(users.id, user.id),
       });
 
+      const openAIModel = dbUser?.openAIModel;
+
       if (!dbUser?.openAIKey) {
         throw new Error("No OpenAI key found");
       }
@@ -44,11 +46,15 @@ export const suggestionRouter = createTRPCRouter({
         input.metaText,
         dbUser.openAIKey,
         user.id,
+        openAIModel!,
       );
 
       return completion;
     }),
 });
+
+
+type model = "gpt-4" | "gpt-3.5-turbo";
 
 export const strToCompletion = async (
   editorType: string,
@@ -56,11 +62,12 @@ export const strToCompletion = async (
   metaText: string,
   openAIKey: string,
   userId: string,
+  openAIModel: model,
 ): Promise<string | null | undefined> => {
   let completion;
   switch (editorType) {
     case "expansion":
-      completion = (await getExpansion(text, metaText, openAIKey))?.choices[0]
+      completion = (await getExpansion(text, metaText, openAIKey, openAIModel))?.choices[0]
         ?.message.content;
       break;
     case "summarise":

@@ -13,6 +13,27 @@ export const usersRouter = createTRPCRouter({
       where: eq(users.id, user.id),
     });
   }),
+  updateModelSelection: protectedProcedure
+    .input(
+      z.object({
+        model: z.enum(["gpt-4", "gpt-3.5-turbo"])
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { model } = input;
+      const {
+        db,
+        session: { user },
+      } = ctx;
+
+      await db
+        .update(users)
+        .set({
+          openAIModel: model,
+        })
+        .where(eq(users.id, user.id));
+
+    }),
   addOpenAIKey: protectedProcedure
     .input(
       z.object({

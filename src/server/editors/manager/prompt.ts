@@ -44,6 +44,7 @@ export const getManager = async (
     metaInput,
     openAIKey,
     userId,
+    "gpt-4",
   );
   return editor_response;
 };
